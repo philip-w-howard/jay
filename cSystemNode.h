@@ -1,6 +1,6 @@
 #pragma once
 //**************************************
-// cProgramNode.h
+// cSystemNode.h
 //
 // Defines AST node for a lang program
 //
@@ -10,18 +10,18 @@
 
 #include "cAstNode.h"
 #include "cSymbol.h"
-#include "cBlockNode.h"
+#include "cDeclsNode.h"
 
-class cProgramNode : public cAstNode
+class cSystemNode : public cAstNode
 {
     public:
-        // param is the block that makes up the program
-        cProgramNode(cSymbol *name, cBlockNode *block) : cAstNode()
+        // param is the decls that makes up the program
+        cSystemNode(cSymbol *name, cDeclsNode *decls) : cAstNode()
         {
             AddChild(name);
-            AddChild(block);
+            AddChild(decls);
         }
 
-        virtual string NodeType() { return string("program"); }
+        virtual string NodeType() { return string("system"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

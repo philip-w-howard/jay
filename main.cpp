@@ -1,7 +1,7 @@
 //**************************************
 // main.cpp
 //
-// Main function for pascal compiler
+// Main function for jay compiler
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
@@ -14,10 +14,9 @@
 #include <unistd.h>
 #include <iostream>
 #include "cSymbolTable.h"
-#include "InitTable.h"
 #include "lex.h"
 #include "astnodes.h"
-#include "pascalishparse.h"
+#include "jayparse.h"
 
 // define global variables
 cSymbolTable g_symbolTable;
@@ -26,7 +25,7 @@ long long cSymbol::nextId;
 // takes two string args: input_file, and output_file
 int main(int argc, char **argv)
 {
-    std::cout << "Philip Howard\n";
+    std::cout << "Jay V 0.0\n";
 
     int result = 0;
 
@@ -57,8 +56,6 @@ int main(int argc, char **argv)
             exit(-2);
         }
     }
-
-    InitRootTable(&g_symbolTable);
 
     result = yyparse();
     if (yyast_root != nullptr && result == 0 && yynerrs == 0)

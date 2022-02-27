@@ -2,7 +2,6 @@
 // cSymbol.cpp
 //
 // Defines class used to represent symbols.
-// Later labs will add features to this class.
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
@@ -14,7 +13,7 @@ using std::string;
 
 #include "lex.h"
 #include "astnodes.h"
-#include "pascalishparse.h"
+#include "jayparse.h"
 #include "cSymbol.h"
 
 // ******************************************
@@ -23,29 +22,14 @@ cSymbol::cSymbol()
 {
     m_id = ++nextId;
     m_name = string("unnamed_") + std::to_string(m_id);
-    m_tokenType = IDENTIFIER;
 }
 
 // **************************************************
 // Constructor: this is the one that actually gets used
 // param is name of symbol
-cSymbol::cSymbol(string name, int tokenType) : cAstNode()
+cSymbol::cSymbol(string name) : cAstNode()
 {
-    if (tokenType < 0) 
-    {
-        m_id = ++nextId;
-        m_tokenType = IDENTIFIER;
-    }
-    else
-    {
-        m_tokenType = tokenType;
-
-        if (tokenType == TYPE_ID)
-            m_id = ++nextId;
-        else
-            m_id = 0;
-    }
-
+    m_id = ++nextId;
     m_name = name;
 }
 
@@ -54,29 +38,6 @@ cSymbol::cSymbol(string name, int tokenType) : cAstNode()
 string cSymbol::GetName() 
 { 
     return m_name; 
-}
-
-//****************************************************
-void cSymbol::SetTokenType(int tokenType)
-{ 
-    m_tokenType = tokenType; 
-}
-//****************************************************
-int cSymbol::GetTokenType()
-{ 
-    return m_tokenType; 
-}
-
-//****************************************************
-cDeclNode *cSymbol::GetDecl()
-{ 
-    return m_decl; 
-}
-
-//****************************************************
-void cSymbol::SetDecl(cDeclNode *decl)
-{ 
-    m_decl = decl; 
 }
 
 //****************************************************

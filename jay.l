@@ -1,18 +1,15 @@
 %{
 //**************************************
-// lang.l
+// jay.l
 //
-// Scanner definition file for CST 320 project
+// Scanner definition file for jay system modeling compiler
 //
 // Author: Phil Howard 
-// phil.howard@oit.edu
-//
-// Date: Dec. 6, 2017
 //
 
 #include "astnodes.h"
 #include "lex.h"
-#include "pascalishparse.h"
+#include "jayparse.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -23,6 +20,7 @@
 
 int Return(int val);
 int ProcessIdentifier(const char *name);
+int ProcessEquation(const char *text);
 //YYSTYPE yylval;
 %}
 
@@ -31,24 +29,44 @@ int ProcessIdentifier(const char *name);
 %option nounput
 %option yylineno
 
-OPERATOR          [+\-*/<=>\^\(\)\[\];,\.\:]
+OPERATOR          [=;:{}"]
 
 %%
 
 [ \t\n\r]                   {} // ignore whitespace
-"{".*"}"                    {} // ignore comments
-"<="                        DO_RETURN(LE);
-"<>"                        DO_RETURN(NOT_EQUAL);
-">="                        DO_RETURN(GE);
-":="                        DO_RETURN(ASSIGN);
+"//".*                      {} // ignore comments
+system                      DO_RETURN(SYSTEM);
+start                       DO_RETURN(START);
+end                         DO_RETURN(END);
+units                       DO_RETURN(UNITS);
+stock                       DO_RETURN(STOCK);
+flow                        DO_RETURN(FLOW);
+var                         DO_RETURN(VAR);
+function                    DO_RETURN(FUNCTION);
+source                      DO_RETURN(SOURCE);
+destination                 DO_RETURN(DESTINATION);
+min                         DO_RETURN(MIN);
+max                         DO_RETURN(MAX);
+infinite                    DO_RETURN(INFINITE);
+initial                     DO_RETURN(INITIAL);
+type                        DO_RETURN(TYPE);
+discrete                    DO_RETURN(DISCRETE);
+continuous                  DO_RETURN(CONTINUOUS);
+milliseconds                DO_RETURN(MILLISECONDS);
+seconds                     DO_RETURN(SECOND);
+hours                       DO_RETURN(HOURS);
+days                        DO_RETURN(DAYS);
+years                       DO_RETURN(YEARS);
+
 [a-zA-Z][a-zA-Z0-9]*        DO_RETURN(ProcessIdentifier(yytext));
-[0-9]+                      { yylval.int_val = atoi(yytext); 
+-?[0-9]+                    { yylval.int_val = atoi(yytext); 
                               DO_RETURN(INT_VAL);
                             }
-[0-9]+\.[0-9]+              { yylval.real_val = atof(yytext);
+-?[0-9]+\.[0-9]+            { yylval.real_val = atof(yytext);
                               DO_RETURN(REAL_VAL);
                             }
 {OPERATOR}                  DO_RETURN(yytext[0]);
+"{"[^}]+"}"                 DO_RETURN(ProcessEquation(yytext));
 .                           DO_RETURN(JUNK_TOKEN);
 
 %%
@@ -61,31 +79,20 @@ int Return(int val)
 }
 
 //************************************************
-static char *strlwr(char *str)
-{
-    char *temp = str;
-    while (*temp)
-    {
-        *temp = tolower(*temp);
-        temp++;
-    }
-
-    return str;
-}
-//************************************************
 int ProcessIdentifier(const char *name)
 {
-    char buff[256];
-    strncpy(buff, name, sizeof(buff)-1);
-    buff[sizeof(buff)-1] = 0;
-
-    strlwr(buff);
-
-    yylval.symbol = g_symbolTable.GlobalLookup(buff);
+    yylval.symbol = g_symbolTable.GlobalLookup(name);
     if (yylval.symbol == nullptr)
     {
-        yylval.symbol = new cSymbol(buff);
+        yylval.symbol = new cSymbol(name);
     }
 
-    return yylval.symbol->GetTokenType();
+    return IDENTIFIER;
+}
+//************************************************
+int ProcessEquation(const char *text)
+{
+    yylval.equation_node = new cEquationNode(text);
+
+    return EQUATION;
 }

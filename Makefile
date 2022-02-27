@@ -11,11 +11,8 @@ COPTS=-Wall -g -c  -O0 -std=c++11
 OBJS=main.o \
 	 jaylex.o \
 	 jayparse.o \
-	 cArrayDeclNode.o \
-	 cRecordDeclNode.o \
 	 cVisitor.o \
 	 cSymbol.o \
-	 InitTable.o \
 
 all: jay
 

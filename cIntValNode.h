@@ -1,10 +1,10 @@
 #pragma once
 //**************************************
-// cIntExprNode.h
+// cIntValNode.h
 //
 // Defines an AST node for an integer constant (literals).
 //
-// Inherits from cExprNode so that integer constants can be used anywhere 
+// Inherits from cValNode so that integer constants can be used anywhere 
 // expressions are used.
 //
 // Author: Phil Howard 
@@ -12,13 +12,12 @@
 //
 
 #include "cAstNode.h"
-#include "cExprNode.h"
 
-class cIntExprNode : public cExprNode
+class cIntValNode : public cAstNode
 {
     public:
         // param is the value of the integer constant
-        cIntExprNode(int value) : cExprNode()
+        cIntValNode(int value) : cAstNode()
         {
             m_value = value;
         }

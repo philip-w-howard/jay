@@ -1,22 +1,21 @@
 #pragma once
 //**************************************
-// cRealExprNode.h
+// cRealValNode.h
 //
 // Defines AST node for a real constant (literal)
-// Inherits from cExprNode so real constants can be used in any expression.
+// Inherits from cValNode so real constants can be used in any expression.
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
 
 #include "cAstNode.h"
-#include "cExprNode.h"
 
-class cRealExprNode : public cExprNode
+class cRealValNode : public cAstNode
 {
     public:
         // param is the value of the constant (literal)
-        cRealExprNode(double value)
+        cRealValNode(double value) : cAstNode()
         {
             m_value = value;
         }

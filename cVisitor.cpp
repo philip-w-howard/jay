@@ -13,7 +13,7 @@
 void cVisitor::Visit(cAstNode *node)        { node->VisitAllChildren(this); }
 void cVisitor::Visit(cDeclNode *node)       { node->VisitAllChildren(this); }
 void cVisitor::Visit(cDeclsNode *node)      { node->VisitAllChildren(this); }
-void cVisitor::Visit(cEquationNode *node)   { node->VisitAllChildren(this); }
+void cVisitor::Visit(cCodeNode *node)       { node->VisitAllChildren(this); }
 void cVisitor::Visit(cIntValNode *node)     { node->VisitAllChildren(this); }
 void cVisitor::Visit(cRealValNode *node)    { node->VisitAllChildren(this); }
 void cVisitor::Visit(cSymbol *node)         { node->VisitAllChildren(this); }

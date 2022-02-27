@@ -20,7 +20,7 @@
 
 int Return(int val);
 int ProcessIdentifier(const char *name);
-int ProcessEquation(const char *text);
+int ProcessCode(const char *text);
 //YYSTYPE yylval;
 %}
 
@@ -66,7 +66,7 @@ years                       DO_RETURN(YEARS);
                               DO_RETURN(REAL_VAL);
                             }
 {OPERATOR}                  DO_RETURN(yytext[0]);
-"<"[^}]+">"                 DO_RETURN(ProcessEquation(yytext));
+"$"[^$]+"$"                 DO_RETURN(ProcessCode(yytext));
 .                           DO_RETURN(JUNK_TOKEN);
 
 %%
@@ -90,9 +90,9 @@ int ProcessIdentifier(const char *name)
     return IDENTIFIER;
 }
 //************************************************
-int ProcessEquation(const char *text)
+int ProcessCode(const char *text)
 {
-    yylval.equation_node = new cEquationNode(text);
+    yylval.code_node = new cCodeNode(text);
 
-    return EQUATION;
+    return CODE;
 }

@@ -14,6 +14,6 @@
 #include "cIntValNode.h"
 #include "cRealValNode.h"
 #include "cSymbol.h"
-#include "cEquationNode.h"
+#include "cCodeNode.h"
 #include "cDeclsNode.h"
 

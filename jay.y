@@ -23,7 +23,7 @@
     cAstNode*       ast_node;
     cSystemNode*    system_node;
     cDeclsNode*     decls_node;
-    cEquationNode*  equation_node;
+    cCodeNode*      code_node;
     cSymbol*        symbol;
     }
 
@@ -62,7 +62,7 @@
 %token <symbol>    IDENTIFIER
 %token <int_val>   INT_VAL
 %token <real_val>  REAL_VAL
-%token <equation>  EQUATION
+%token <code_node> CODE
 
 %type <decls_node> decls
 %type <system_node> system
@@ -95,7 +95,7 @@ flow : FLOW IDENTIFIER '{' settings '}'
                                 {}
 var : VAR IDENTIFIER '{' settings '}'
                                 {}
-func : FUNCTION IDENTIFIER EQUATION 
+func : FUNCTION IDENTIFIER CODE 
                                 {}
 
 settings : settings setting

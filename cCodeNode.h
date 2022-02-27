@@ -2,7 +2,7 @@
 //**************************************
 // cSymbol.h
 //
-// Defines class used to represent symbols.
+// Defines class used to represent arbitrary code blobs
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
@@ -14,13 +14,13 @@ using std::string;
 
 #include "cAstNode.h"
 
-class cEquationNode : public cAstNode
+class cCodeNode : public cAstNode
 {
     public:
-        cEquationNode();
+        cCodeNode();
 
         // param is name of symbol
-        cEquationNode(string contents) : cAstNode()
+        cCodeNode(string contents) : cAstNode()
         {
             m_contents = contents;
         }

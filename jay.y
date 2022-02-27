@@ -48,7 +48,7 @@
 %token MIN
 %token MAX
 %token INFINITE
-%token INITIAL
+%token INITIAL_VAL
 %token TYPE
 %token DISCRETE
 %token CONTINUOUS
@@ -111,13 +111,15 @@ setting : MIN '=' value ';'
                                 {}
         | END '=' value ';'
                                 {}
-        | INITIAL '=' value ';'
+        | INITIAL_VAL '=' value ';'
                                 {}
         | SOURCE '=' IDENTIFIER ';'
                                 {}
         | DESTINATION '=' IDENTIFIER ';'
                                 {}
         | FUNCTION '=' IDENTIFIER ';'
+                                {}
+        | error ';'
                                 {}
 value : INT_VAL
                                 {}

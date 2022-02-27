@@ -29,7 +29,7 @@ int ProcessEquation(const char *text);
 %option nounput
 %option yylineno
 
-OPERATOR          [=;:{}"]
+OPERATOR          [=;:{}"<>]
 
 %%
 
@@ -48,7 +48,7 @@ destination                 DO_RETURN(DESTINATION);
 min                         DO_RETURN(MIN);
 max                         DO_RETURN(MAX);
 infinite                    DO_RETURN(INFINITE);
-initial                     DO_RETURN(INITIAL);
+initial                     DO_RETURN(INITIAL_VAL);
 type                        DO_RETURN(TYPE);
 discrete                    DO_RETURN(DISCRETE);
 continuous                  DO_RETURN(CONTINUOUS);
@@ -66,7 +66,7 @@ years                       DO_RETURN(YEARS);
                               DO_RETURN(REAL_VAL);
                             }
 {OPERATOR}                  DO_RETURN(yytext[0]);
-"{"[^}]+"}"                 DO_RETURN(ProcessEquation(yytext));
+"<"[^}]+">"                 DO_RETURN(ProcessEquation(yytext));
 .                           DO_RETURN(JUNK_TOKEN);
 
 %%

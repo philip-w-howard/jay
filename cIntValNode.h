@@ -11,13 +11,14 @@
 // phil.howard@oit.edu
 //
 
-#include "cAstNode.h"
+#include <string>
+#include "cValueNode.h"
 
-class cIntValNode : public cAstNode
+class cIntValNode : public cValueNode
 {
     public:
         // param is the value of the integer constant
-        cIntValNode(int value) : cAstNode()
+        cIntValNode(int value) : cValueNode()
         {
             m_value = value;
         }

@@ -9,13 +9,14 @@
 // phil.howard@oit.edu
 //
 
-#include "cAstNode.h"
+#include <string>
+#include "cValueNode.h"
 
-class cRealValNode : public cAstNode
+class cRealValNode : public cValueNode
 {
     public:
         // param is the value of the constant (literal)
-        cRealValNode(double value) : cAstNode()
+        cRealValNode(double value) : cValueNode()
         {
             m_value = value;
         }

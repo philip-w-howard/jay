@@ -37,8 +37,12 @@ OPERATOR          [=;:{}"<>]
 "//".*                      {} // ignore comments
 system                      DO_RETURN(SYSTEM);
 start                       DO_RETURN(START);
+header                      DO_RETURN(HEADER);
+trailer                     DO_RETURN(TRAILER);
+update                      DO_RETURN(UPDATE);
 end                         DO_RETURN(END);
 units                       DO_RETURN(UNITS);
+setup                       DO_RETURN(SETUP);
 stock                       DO_RETURN(STOCK);
 flow                        DO_RETURN(FLOW);
 var                         DO_RETURN(VAR);
@@ -53,7 +57,8 @@ type                        DO_RETURN(TYPE);
 discrete                    DO_RETURN(DISCRETE);
 continuous                  DO_RETURN(CONTINUOUS);
 milliseconds                DO_RETURN(MILLISECONDS);
-seconds                     DO_RETURN(SECOND);
+seconds                     DO_RETURN(SECONDS);
+minutes                     DO_RETURN(MINUTES);
 hours                       DO_RETURN(HOURS);
 days                        DO_RETURN(DAYS);
 years                       DO_RETURN(YEARS);

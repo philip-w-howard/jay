@@ -20,9 +20,6 @@ class cDeclsNode : public cAstNode
             if (decl != nullptr) AddChild(decl);
         }
 
-        // Copy all the decls from another node into this one
-        void AddDecls(cDeclsNode *decls) { AddAllChildren(decls); }
-
         // Add another decl to the list
         void AddDecl(cDeclNode *decl) { AddChild(decl); }
 

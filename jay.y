@@ -13,6 +13,8 @@
 #include "lex.h"
 #include "astnodes.h"
 
+bool g_semanticErrorHappened = false;
+
 %}
 
 %locations
@@ -161,7 +163,7 @@ setting : MIN '=' value ';'
         | DELTA '=' IDENTIFIER ';'
                                 { $$ = new cIdSettingNode("delta", $3); }
         | UNITS '=' units ';'
-                                {  $$ = nullptr; } //$$ = new cUnitsNode($3); }
+                                {  $$ = $3; }
         | error ';'
                                 { $$ = nullptr; }
 value : INT_VAL
@@ -196,3 +198,13 @@ int yyerror(const char *msg)
 
     return 0;
 }
+
+// Function that gets called when a semantic error happens
+void SemanticParseError(std::string error)
+{
+    std::cout << "ERROR: " << error << " on line "
+        << yylineno << "\n";
+    g_semanticErrorHappened = true;
+    yynerrs++;
+}
+

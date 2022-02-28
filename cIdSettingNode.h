@@ -15,20 +15,12 @@ class cIdSettingNode : public cSettingNode
 {
     public:
         // param is name of symbol
-        cIdSettingNode(string name, cSymbol *identifier) : cSettingNode()
+        cIdSettingNode(string name, cSymbol *identifier) 
+            : cSettingNode(name)
         {
-            m_name = name;
             AddChild(identifier);
         }
 
-        virtual string NodeType() { return "IdSetting"; }
+        virtual string NodeType() { return GetName(); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-
-        virtual string AttributesToString()
-        {
-            return " name=\"" + m_name + "\"";
-        }
-
-    protected:
-        string m_name;
 };

@@ -15,20 +15,12 @@ class cValueSettingNode : public cSettingNode
 {
     public:
         // param is name of symbol
-        cValueSettingNode(string name, cValueNode *value) : cSettingNode()
+        cValueSettingNode(string name, cValueNode *value) 
+            : cSettingNode(name)
         {
-            m_name = name;
             AddChild(value);
         }
 
-        virtual string NodeType() { return "ValueSetting"; }
+        virtual string NodeType() { return GetName(); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-
-        virtual string AttributesToString()
-        {
-            return " name=\"" + m_name + "\"";
-        }
-
-    protected:
-        string m_name;
 };

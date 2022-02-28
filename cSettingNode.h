@@ -14,7 +14,13 @@
 class cSettingNode : public cAstNode
 {
     public:
-        cSettingNode() : cAstNode() {}
+        cSettingNode(string name) : cAstNode() 
+        {
+            m_name = name;
+        }
 
-        void AddSetting(cSettingNode *setting) { AddChild(setting); }
+        string GetName() { return m_name; }
+
+    protected:
+        string m_name;
 };

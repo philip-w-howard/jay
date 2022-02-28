@@ -9,12 +9,12 @@
 //
 
 #include <string>
-#include "cAstNode.h"
+#include "cSettingNode.h"
 
-class cUnitsNode : public cAstNode
+class cUnitsNode : public cSettingNode
 {
     public:
-        cUnitsNode(string units) : cAstNode()
+        cUnitsNode(string units) : cSettingNode("units")
         {
             m_units = units;
         }

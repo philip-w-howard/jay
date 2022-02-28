@@ -18,9 +18,8 @@ class cFuncNode : public cDeclNode
 {
     public:
         cFuncNode(cSymbol *name, cTypeNode *type, cCodeNode *code) 
-            : cDeclNode() 
+            : cDeclNode(name) 
         {
-            AddChild(name);
             AddChild(type);
             AddChild(code);
         }

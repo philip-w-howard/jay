@@ -16,9 +16,9 @@
 class cFlowNode : public cDeclNode
 {
     public:
-        cFlowNode(cSymbol *name, cSettingsNode *settings) : cDeclNode() 
+        cFlowNode(cSymbol *name, cSettingsNode *settings) 
+            : cDeclNode(name) 
         {
-            AddChild(name);
             AddChild(settings);
         }
 

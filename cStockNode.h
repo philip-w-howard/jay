@@ -16,9 +16,9 @@
 class cStockNode : public cDeclNode
 {
     public:
-        cStockNode(cSymbol *name, cSettingsNode *settings) : cDeclNode() 
+        cStockNode(cSymbol *name, cSettingsNode *settings) 
+            : cDeclNode(name) 
         {
-            AddChild(name);
             AddChild(settings);
         }
 

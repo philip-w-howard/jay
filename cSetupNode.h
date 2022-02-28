@@ -15,7 +15,7 @@
 class cSetupNode : public cDeclNode
 {
     public:
-        cSetupNode(cSettingsNode *settings) : cDeclNode() 
+        cSetupNode(cSettingsNode *settings) : cDeclNode(new cSymbol("setup")) 
         {
             AddChild(settings);
         }

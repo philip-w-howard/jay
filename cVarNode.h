@@ -18,9 +18,8 @@ class cVarNode : public cDeclNode
 {
     public:
         cVarNode(cSymbol *name, cTypeNode *type, cSettingsNode *settings) 
-            : cDeclNode() 
+            : cDeclNode(name) 
         {
-            AddChild(name);
             AddChild(type);
             AddChild(settings);
         }

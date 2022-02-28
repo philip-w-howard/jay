@@ -26,6 +26,7 @@
 #include "cSymbol.h"
 #include "cSystemNode.h"
 #include "cTrailerNode.h"
+#include "cTypeNode.h"
 #include "cUnitsNode.h"
 #include "cValueNode.h"
 #include "cValueSettingNode.h"

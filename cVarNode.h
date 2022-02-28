@@ -11,14 +11,17 @@
 #include "cAstNode.h"
 #include "cDeclNode.h"
 #include "cSettingsNode.h"
+#include "cTypeNode.h"
 #include "cSymbol.h"
 
 class cVarNode : public cDeclNode
 {
     public:
-        cVarNode(cSymbol *name, cSettingsNode *settings) : cDeclNode() 
+        cVarNode(cSymbol *name, cTypeNode *type, cSettingsNode *settings) 
+            : cDeclNode() 
         {
             AddChild(name);
+            AddChild(type);
             AddChild(settings);
         }
 

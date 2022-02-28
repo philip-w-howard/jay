@@ -30,6 +30,7 @@
     cCodeNode*      code_node;
     cSymbol*        symbol;
     cValueNode*     value;
+    cTypeNode*      type;
     cUnitsNode*     units;
     }
 
@@ -52,6 +53,7 @@
 %token FLOW
 %token VAR
 %token FUNCTION
+%token DELTA
 %token UPDATE
 %token SOURCE
 %token DESTINATION
@@ -88,6 +90,7 @@
 %type <settings_node> settings
 %type <setting_node> setting
 %type <value> value
+%type <type> type
 %type <units> units
 
 %%
@@ -125,10 +128,10 @@ stock : STOCK IDENTIFIER '{' settings '}'
                                 { $$ = new cStockNode($2, $4); }
 flow : FLOW IDENTIFIER '{' settings '}'
                                 { $$ = new cFlowNode($2, $4); }
-var : VAR IDENTIFIER '{' settings '}'
-                                { $$ = new cVarNode($2, $4); }
-func : FUNCTION IDENTIFIER CODE 
-                                { $$ = new cFuncNode($2, $3); }
+var : VAR IDENTIFIER ':' type '{' settings '}'
+                                { $$ = new cVarNode($2, $4, $6); }
+func : FUNCTION IDENTIFIER ':' type CODE 
+                                { $$ = new cFuncNode($2, $4, $5); }
 header : HEADER CODE 
                                 { $$ = new cHeaderNode($2); }
 trailer : TRAILER CODE 
@@ -155,6 +158,8 @@ setting : MIN '=' value ';'
                                 { $$ = new cIdSettingNode("destination", $3); }
         | UPDATE '=' IDENTIFIER ';'
                                 { $$ = new cIdSettingNode("update", $3); }
+        | DELTA '=' IDENTIFIER ';'
+                                { $$ = new cIdSettingNode("delta", $3); }
         | UNITS '=' units ';'
                                 {  $$ = nullptr; } //$$ = new cUnitsNode($3); }
         | error ';'
@@ -177,6 +182,10 @@ units : MILLISECONDS
                                 { $$ = new cUnitsNode("days"); }
         | YEARS
                                 { $$ = new cUnitsNode("years"); }
+type : CONTINUOUS
+                                { $$ = new cTypeNode("continuous"); }
+        | DISCRETE
+                                { $$ = new cTypeNode("discrete"); }
 %%
 
 // Function to format error messages

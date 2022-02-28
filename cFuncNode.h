@@ -11,14 +11,17 @@
 #include "cAstNode.h"
 #include "cDeclNode.h"
 #include "cCodeNode.h"
+#include "cTypeNode.h"
 #include "cSymbol.h"
 
 class cFuncNode : public cDeclNode
 {
     public:
-        cFuncNode(cSymbol *name, cCodeNode *code) : cDeclNode() 
+        cFuncNode(cSymbol *name, cTypeNode *type, cCodeNode *code) 
+            : cDeclNode() 
         {
             AddChild(name);
+            AddChild(type);
             AddChild(code);
         }
 

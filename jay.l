@@ -40,6 +40,7 @@ start                       DO_RETURN(START);
 header                      DO_RETURN(HEADER);
 trailer                     DO_RETURN(TRAILER);
 update                      DO_RETURN(UPDATE);
+delta                       DO_RETURN(DELTA);
 end                         DO_RETURN(END);
 units                       DO_RETURN(UNITS);
 setup                       DO_RETURN(SETUP);

@@ -28,11 +28,11 @@ class cCodeNode : public cAstNode
         // return name of symbol
         string GetContents() { return m_contents; }
         
-        virtual string AttributesToString()
+        virtual string ToString()
         {
-            string result(" text=\"");
+            string result("<code>\n<![CDATA[");
             result += m_contents;
-            result += "\"";
+            result += "]]>\n</code>";
             return result;
         }
 

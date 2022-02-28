@@ -104,7 +104,7 @@ class cAstNode
 
         //*************************************
         // return a string representation of the node
-        string ToString() 
+        virtual string ToString() 
         {
             string result("");
 

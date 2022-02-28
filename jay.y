@@ -9,7 +9,7 @@
 //
 
 #include <iostream>
-#include <limits.h>
+#include <limits>
 #include "lex.h"
 #include "astnodes.h"
 
@@ -30,6 +30,7 @@
     cCodeNode*      code_node;
     cSymbol*        symbol;
     cValueNode*     value;
+    cUnitsNode*     units;
     }
 
 %{
@@ -87,6 +88,8 @@
 %type <settings_node> settings
 %type <setting_node> setting
 %type <value> value
+%type <units> units
+
 %%
 
 system: SYSTEM IDENTIFIER '{' decls '}'
@@ -153,27 +156,27 @@ setting : MIN '=' value ';'
         | UPDATE '=' IDENTIFIER ';'
                                 { $$ = new cIdSettingNode("update", $3); }
         | UNITS '=' units ';'
-                                { } //$$ = new cUnitsNode($3); }
+                                {  $$ = nullptr; } //$$ = new cUnitsNode($3); }
         | error ';'
-                                {}
+                                { $$ = nullptr; }
 value : INT_VAL
-                                { } //$$ = new cIntNode($1); }
+                                { $$ = new cIntValNode($1); }
         | REAL_VAL
-                                { } //$$ = new cRealNode($1); }
+                                { $$ = new cRealValNode($1); }
         | INFINITE
-                                { } //$$ = new cRealNode(DBL_MAX); }
+                                { $$ = new cRealValNode(std::numeric_limits<double>::infinity()); }
 units : MILLISECONDS
-                                {}
+                                { $$ = new cUnitsNode("milliseconds"); }
         | SECONDS
-                                {}
+                                { $$ = new cUnitsNode("seconds"); }
         | MINUTES
-                                {}
+                                { $$ = new cUnitsNode("minutes"); }
         | HOURS
-                                {}
+                                { $$ = new cUnitsNode("hours"); }
         | DAYS
-                                {}
+                                { $$ = new cUnitsNode("days"); }
         | YEARS
-                                {}
+                                { $$ = new cUnitsNode("years"); }
 %%
 
 // Function to format error messages

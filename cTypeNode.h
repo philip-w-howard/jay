@@ -19,6 +19,9 @@ class cTypeNode : public cAstNode
             m_type = type;
         }
 
+        bool IsFloat() { return m_type == "continuous"; }
+        bool IsInt()   { return m_type == "discrete"; }
+
         virtual string AttributesToString() 
         {
             return " type=\"" + m_type + "\"";

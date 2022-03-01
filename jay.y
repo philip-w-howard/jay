@@ -126,10 +126,10 @@ decl :  stock
 
 setup : SETUP '{' settings '}'
                                 { $$ = new cSetupNode($3); }
-stock : STOCK IDENTIFIER '{' settings '}'
-                                { $$ = new cStockNode($2, $4); }
-flow : FLOW IDENTIFIER '{' settings '}'
-                                { $$ = new cFlowNode($2, $4); }
+stock : STOCK IDENTIFIER ':' type '{' settings '}'
+                                { $$ = new cStockNode($2, $4, $6); }
+flow : FLOW IDENTIFIER ':' type '{' settings '}'
+                                { $$ = new cFlowNode($2, $4, $6); }
 var : VAR IDENTIFIER ':' type '{' settings '}'
                                 { $$ = new cVarNode($2, $4, $6); }
 func : FUNCTION IDENTIFIER ':' type CODE 

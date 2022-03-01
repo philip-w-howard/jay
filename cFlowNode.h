@@ -12,11 +12,12 @@
 #include "cDeclNode.h"
 #include "cSettingsNode.h"
 #include "cSymbol.h"
+#include "cTypeNode.h"
 
 class cFlowNode : public cDeclNode
 {
     public:
-        cFlowNode(cSymbol *name, cSettingsNode *settings) 
+        cFlowNode(cSymbol *name, cTypeNode *type, cSettingsNode *settings) 
             : cDeclNode(name) 
         {
             std::vector<string> allowed = 
@@ -26,6 +27,7 @@ class cFlowNode : public cDeclNode
             settings->CheckAllowedSettings(allowed);
             settings->CheckRequiredSettings(required);
             
+            AddChild(type);
             AddChild(settings);
         }
 

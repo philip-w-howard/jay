@@ -12,13 +12,15 @@
 #include "cDeclNode.h"
 #include "cSettingsNode.h"
 #include "cSymbol.h"
+#include "cTypeNode.h"
 
 class cStockNode : public cDeclNode
 {
     public:
-        cStockNode(cSymbol *name, cSettingsNode *settings) 
+        cStockNode(cSymbol *name, cTypeNode *type, cSettingsNode *settings) 
             : cDeclNode(name) 
         {
+            AddChild(type);
             AddChild(settings);
         }
 

@@ -11,15 +11,11 @@
 #include "astnodes.h"
 #include "cCodeGen.h"
 
-#include "cVarImpl.h"
-
 static string front_matter =
     "//**********************************\n"
     "// This is the beginning of the generated code\n"
     "// There should be decls, etc. here\n"
-    "#include <string>\n"
-    "using std::string;\n"
-    "#include \"cVarImpl.h\"\n";
+    "#include \"cVarImpl.h\"\n\n";
 
 static string end_matter =
     "//**********************************\n"
@@ -211,7 +207,7 @@ void cCodeGen::Visit(cVarNode *node)
     EmitString(node->GetName());
     EmitString(";\n");
 
-    init_body += "cVarImpl *" + node->GetName() + "_Impl = " + 
+    init_body += "\ncVarImpl *" + node->GetName() + "_Impl = " + 
         "new cVarImpl( \"" + node->GetName() + "\", " + 
         to_string(node->GetType()->IsFloat()) +
         ", &" + node->GetName() + ");\n";

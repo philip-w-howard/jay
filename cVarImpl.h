@@ -1,12 +1,6 @@
 #include <string>
 #include <unordered_map>
-
-// I'm sure there is a template way to do this, but hey, I'm a C programmer
-#define ADDFUNC(name, var) \
-    void name (double x) { \
-        if (m_isFloat) m_d_ ## var = x; \
-        else m_l_ ## var = (long)x; \
-    } \
+using std::string;
 
 class cVarImpl
 {

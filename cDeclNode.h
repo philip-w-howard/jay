@@ -31,5 +31,10 @@ class cDeclNode : public cAstNode
             AddChild(name);
         }
 
+        virtual string GetName()
+        {
+            return dynamic_cast<cSymbol*>(GetChild(0))->GetName();
+        }
+
         virtual bool IsReal() { return false; }
 };

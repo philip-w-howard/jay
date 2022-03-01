@@ -61,7 +61,8 @@ int main(int argc, char **argv)
     result = yyparse();
     if (yyast_root != nullptr && result == 0 && yynerrs == 0)
     {
-        cCodeGen coder("outputfile.c");
+        cCodeGen coder("outputfile.cpp");
+        yyast_root->Visit(&coder);
         std::cout << yyast_root->ToString() << std::endl;
     } else {
         std::cout << yynerrs << " Errors in compile\n";

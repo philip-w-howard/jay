@@ -39,4 +39,7 @@ class cCodeGen : public cVisitor
         virtual void Visit(cValueNode *node);
         virtual void Visit(cValueSettingNode *node);
         virtual void Visit(cVarNode *node);
+    protected:
+        std::string to_string(bool val)
+        { return val ? "true" : "false"; }
 };

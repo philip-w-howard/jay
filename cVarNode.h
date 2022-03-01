@@ -22,13 +22,19 @@ class cVarNode : public cDeclNode
         cVarNode(cSymbol *name, cTypeNode *type, cSettingsNode *settings) 
             : cDeclNode(name) 
         {
-            std::vector<string> allowed = {"delta", "update", "min", "max"};
+            std::vector<string> allowed = 
+            {"delta", "update", "min", "max", "initial"};
             std::vector<string> required = { "min", "max" };
             settings->CheckAllowedSettings(allowed);
             settings->CheckRequiredSettings(required);
 
             AddChild(type);
             AddChild(settings);
+        }
+
+        virtual cTypeNode *GetType()
+        {
+            return dynamic_cast<cTypeNode*>(GetChild(1));
         }
 
         virtual string NodeType() { return string("Var"); }

@@ -7,10 +7,6 @@
         if (m_isFloat) m_d_ ## var = x; \
         else m_l_ ## var = (long)x; \
     } \
-    void name (long x) {\
-        if (m_isFloat) m_d_ ## var = x; \
-        else m_l_ ## var = x; \
-    }
 
 class cVarImpl
 {
@@ -32,29 +28,29 @@ class cVarImpl
             cVarImpl::VarList[name] = this;
         }
 
-        ADDFUNC(AddMax, max)
-        ADDFUNC(AddMin, min)
-        ADDFUNC(AddInit, init)
+        ADDFUNC(Addmax, max)
+        ADDFUNC(Addmin, min)
+        ADDFUNC(Addinitialize, init)
 
-        void AddUpdate(double (*func)())
+        void Addupdate(double (*func)())
         {
             m_d_func = func;
             m_do_delta = false;
         }
 
-        void AddUpdate(long (*func)())
+        void Addupdate(long (*func)())
         {
             m_l_func = func;
             m_do_delta = false;
         }
 
-        void AddDelta(double (*func)())
+        void Adddelta(double (*func)())
         {
             m_d_func = func;
             m_do_delta = true;
         }
 
-        void AddDelta(long (*func)())
+        void Adddelta(long (*func)())
         {
             m_l_func = func;
             m_do_delta = true;

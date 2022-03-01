@@ -17,7 +17,10 @@
 #include "lex.h"
 #include "astnodes.h"
 #include "jayparse.h"
+#include "cCodeHeader.h"
 #include "cCodeGen.h"
+#include "cCodeTrailer.h"
+#include "emit.h"
 
 // define global variables
 cSymbolTable g_symbolTable;
@@ -61,8 +64,22 @@ int main(int argc, char **argv)
     result = yyparse();
     if (yyast_root != nullptr && result == 0 && yynerrs == 0)
     {
-        cCodeGen coder("outputfile.cpp");
-        yyast_root->Visit(&coder);
+        InitOutput("outputfile.cpp");
+
+        cCodeHeader header;
+        yyast_root->Visit(&header);
+
+        {
+            // code gen needs to be in its own scope so destructor gets called
+            cCodeGen coder;
+            yyast_root->Visit(&coder);
+        }
+
+        cCodeTrailer trailer;
+        yyast_root->Visit(&trailer);
+
+        FinalizeOutput();
+
         std::cout << yyast_root->ToString() << std::endl;
     } else {
         std::cout << yynerrs << " Errors in compile\n";

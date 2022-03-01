@@ -24,6 +24,16 @@ class cFuncNode : public cDeclNode
             AddChild(code);
         }
 
+        bool IsFloat() 
+        {
+            return dynamic_cast<cTypeNode*>(GetChild(1))->IsFloat();
+        }
+
+        string GetCode()
+        {
+            return dynamic_cast<cCodeNode*>(GetChild(2))->GetContents(); 
+        }
+
         virtual string NodeType() { return string("Func"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 

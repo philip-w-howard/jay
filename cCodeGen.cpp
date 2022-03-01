@@ -27,7 +27,7 @@ static string end_matter =
     "// There should be a close curly here\n";
 
 static string init_header =
-    "void InitTables() {\n";
+    "\nvoid InitTables() {\n";
 
 static string init_trailer =
     "}\n";
@@ -35,9 +35,8 @@ static string init_trailer =
 static string init_body = "";
 
 //*************************************************
-cCodeGen::cCodeGen(std::string filename) : cVisitor()
+cCodeGen::cCodeGen() : cVisitor()
 {
-    InitOutput(filename.c_str());
     EmitString(front_matter);
 }
 
@@ -48,7 +47,6 @@ cCodeGen::~cCodeGen()
     EmitString(init_body);
     EmitString(init_trailer);
     EmitString(end_matter);
-    FinalizeOutput();
 }
 
 //*************************************************
@@ -79,7 +77,20 @@ void cCodeGen::Visit(cFlowNode *node)
 //*************************************************
 void cCodeGen::Visit(cFuncNode *node)
 {
-    node->VisitAllChildren(this);
+    if (node->IsFloat())
+    {
+        EmitString("\ndouble " + node->GetName() + "()\n" +
+                "{ double value;\n");
+    }
+    else
+    {
+        EmitString("long " + node->GetName() + "()\n" +
+                "{ long value;\n");
+    }
+    EmitString(node->GetCode());
+    EmitString("\nreturn value;\n}\n");
+
+    //node->VisitAllChildren(this);
 }
 //*************************************************
 void cCodeGen::Visit(cHeaderNode *node)
@@ -89,7 +100,26 @@ void cCodeGen::Visit(cHeaderNode *node)
 //*************************************************
 void cCodeGen::Visit(cIdSettingNode *node)
 {
-    node->VisitAllChildren(this);
+    if (m_curr_decl != "")
+    {
+        string name = node->GetName();
+        if (name == "source" || name == "destination")
+        {
+            init_body += m_curr_decl + "_Impl->Add" + name + "(\"" +
+                node->GetIdentifier() + "\");\n";
+        }
+        else if (name =="update" || name == "delta")
+        {
+            init_body += m_curr_decl + "_Impl->Add" + name + "(" +
+                node->GetIdentifier() + ");\n";
+        }
+        else
+        {
+            std::cerr << "ERROR: Invalid name in Id Setting node\n";
+            exit(1);
+        }
+    }
+    // node->VisitAllChildren(this);
 }
 //*************************************************
 void cCodeGen::Visit(cIntValNode *node)
@@ -119,6 +149,14 @@ void cCodeGen::Visit(cSetupNode *node)
 //*************************************************
 void cCodeGen::Visit(cStockNode *node)
 {
+    if (node->GetType()->IsFloat())
+        EmitString("static double ");
+    else
+        EmitString("static long ");
+
+    EmitString(node->GetName());
+    EmitString(";\n");
+
     node->VisitAllChildren(this);
 }
 //*************************************************
@@ -154,7 +192,13 @@ void cCodeGen::Visit(cValueNode *node)
 //*************************************************
 void cCodeGen::Visit(cValueSettingNode *node)
 {
-    node->VisitAllChildren(this);
+    if (m_curr_decl != "")
+    {
+        init_body += m_curr_decl + "_Impl->Add" + node->GetName() + "(" +
+            node->GetValue()->GetTextValue() + ");\n";
+    }
+
+    //node->VisitAllChildren(this);
 }
 //*************************************************
 void cCodeGen::Visit(cVarNode *node)
@@ -167,10 +211,13 @@ void cCodeGen::Visit(cVarNode *node)
     EmitString(node->GetName());
     EmitString(";\n");
 
-    init_body += "static cVarImpl *" + node->GetName() + "_Impl = " + 
+    init_body += "cVarImpl *" + node->GetName() + "_Impl = " + 
         "new cVarImpl( \"" + node->GetName() + "\", " + 
         to_string(node->GetType()->IsFloat()) +
         ", &" + node->GetName() + ");\n";
 
+    m_curr_decl = node->GetName();
+    node->VisitAllChildren(this);
+    m_curr_decl = "";
 }
 

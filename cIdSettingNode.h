@@ -21,6 +21,9 @@ class cIdSettingNode : public cSettingNode
             AddChild(identifier);
         }
 
+        string GetIdentifier() 
+        { return dynamic_cast<cSymbol*>(GetChild(0))->GetName(); }
+
         virtual string NodeType() { return GetName(); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

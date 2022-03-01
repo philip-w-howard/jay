@@ -22,7 +22,7 @@ class cCodeNode : public cAstNode
         // param is name of symbol
         cCodeNode(string contents) : cAstNode()
         {
-            m_contents = contents;
+            m_contents = contents.substr(1, contents.length()-2);
         }
 
         // return name of symbol

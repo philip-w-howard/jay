@@ -15,4 +15,6 @@ class cValueNode : public cAstNode
     public:
         // param is the value of the integer constant
         cValueNode() : cAstNode() {}
+
+        virtual string GetTextValue() = 0;
 };

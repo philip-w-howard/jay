@@ -21,6 +21,9 @@ class cValueSettingNode : public cSettingNode
             AddChild(value);
         }
 
+        cValueNode *GetValue() 
+        { return dynamic_cast<cValueNode*>(GetChild(0)); }
+
         virtual string NodeType() { return GetName(); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

@@ -18,11 +18,12 @@ class cIntValNode : public cValueNode
 {
     public:
         // param is the value of the integer constant
-        cIntValNode(int value) : cValueNode()
+        cIntValNode(long value) : cValueNode()
         {
             m_value = value;
         }
 
+        virtual string GetTextValue() { return std::to_string(m_value); }
         virtual string AttributesToString() 
         {
             return " value=\"" + std::to_string(m_value) + "\"";
@@ -30,5 +31,5 @@ class cIntValNode : public cValueNode
         virtual string NodeType() { return string("INTEGER"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
     protected:
-        int m_value;        // value of integer constant (literal)
+        long m_value;        // value of integer constant (literal)
 };

@@ -24,6 +24,11 @@ class cStockNode : public cDeclNode
             AddChild(settings);
         }
 
+        virtual cTypeNode *GetType()
+        {
+            return dynamic_cast<cTypeNode*>(GetChild(1));
+        }
+
         virtual string NodeType() { return string("Stock"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 

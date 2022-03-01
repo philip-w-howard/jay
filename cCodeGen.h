@@ -12,10 +12,8 @@
 class cCodeGen : public cVisitor
 {
     public:
-        cCodeGen(std::string filename);
+        cCodeGen();
         ~cCodeGen();
-
-        void VisitAllNodes(cAstNode *node) { node->Visit(this); }
 
         virtual void Visit(cAstNode *node);
         virtual void Visit(cCodeNode *node);
@@ -42,4 +40,6 @@ class cCodeGen : public cVisitor
     protected:
         std::string to_string(bool val)
         { return val ? "true" : "false"; }
+
+        std::string m_curr_decl;
 };

@@ -20,6 +20,11 @@ class cHeaderNode : public cDeclNode
             AddChild(code);
         }
 
+        string GetText()
+        {
+            return dynamic_cast<cCodeNode*>(GetChild(0))->GetContents(); 
+        }
+
         virtual string NodeType() { return string("Header"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 

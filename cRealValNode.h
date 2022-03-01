@@ -21,6 +21,8 @@ class cRealValNode : public cValueNode
             m_value = value;
         }
 
+        virtual string GetTextValue() { return std::to_string(m_value); }
+
         virtual string AttributesToString() 
         {
             return " value=\"" + std::to_string(m_value) + "\"";

@@ -13,6 +13,8 @@ OBJS=main.o \
 	 jayparse.o \
 	 cVisitor.o \
 	 cSymbol.o \
+	 cCodeGen.o \
+	 emit.o \
 
 all: jay
 

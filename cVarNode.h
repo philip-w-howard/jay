@@ -8,6 +8,8 @@
 // phil.howard@oit.edu
 //
 
+#include <vector>
+
 #include "cAstNode.h"
 #include "cDeclNode.h"
 #include "cSettingsNode.h"
@@ -20,6 +22,11 @@ class cVarNode : public cDeclNode
         cVarNode(cSymbol *name, cTypeNode *type, cSettingsNode *settings) 
             : cDeclNode(name) 
         {
+            std::vector<string> allowed = {"delta", "update", "min", "max"};
+            std::vector<string> required = { "min", "max" };
+            settings->CheckAllowedSettings(allowed);
+            settings->CheckRequiredSettings(required);
+
             AddChild(type);
             AddChild(settings);
         }

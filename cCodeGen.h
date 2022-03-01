@@ -1,43 +1,22 @@
 #pragma once
-//*************************************************
-// Definition of Visitor base class
+//*****************************************************
 //
-// Author: Philip Howard
+// Visitor implementation to generate stackl code
+//
+// Author: Phil Howard
 // Email:  phil.howard@oit.edu
 //
 
-// Need forward declaration of all classes.
-// Forward declare them to avoid circular include problems
+#include "cVisitor.h"
 
-class cAstNode;
-class cCodeNode;
-class cDeclNode;
-class cDeclsNode;
-class cFlowNode;
-class cFuncNode;
-class cHeaderNode;
-class cIdSettingNode;
-class cIntValNode;
-class cRealValNode;
-class cSettingNode;
-class cSettingsNode;
-class cSetupNode;
-class cStockNode;
-class cSymbol;
-class cSystemNode;
-class cTrailerNode;
-class cTypeNode;
-class cUnitsNode;
-class cValueNode;
-class cValueSettingNode;
-class cVarNode;
-
-class cVisitor
+class cCodeGen : public cVisitor
 {
     public:
-        cVisitor() {}
+        cCodeGen(std::string filename);
+        ~cCodeGen();
 
-        // A visit method for every AST node
+        void VisitAllNodes(cAstNode *node) { node->Visit(this); }
+
         virtual void Visit(cAstNode *node);
         virtual void Visit(cCodeNode *node);
         virtual void Visit(cDeclNode *node);

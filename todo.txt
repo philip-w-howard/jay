@@ -1,0 +1,17 @@
+Semantic checks for:
+    required settings
+    not-allowed settings
+
+    Added mechanism. Need to add invokations
+
+    Need either/or
+
+Visitor
+    Semantics?
+    Code Gen
+
+Test suite
+Command line options
+    ast
+        xmllint output
+

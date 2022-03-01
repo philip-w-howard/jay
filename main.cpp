@@ -17,6 +17,7 @@
 #include "lex.h"
 #include "astnodes.h"
 #include "jayparse.h"
+#include "cCodeGen.h"
 
 // define global variables
 cSymbolTable g_symbolTable;
@@ -60,6 +61,7 @@ int main(int argc, char **argv)
     result = yyparse();
     if (yyast_root != nullptr && result == 0 && yynerrs == 0)
     {
+        cCodeGen coder("outputfile.c");
         std::cout << yyast_root->ToString() << std::endl;
     } else {
         std::cout << yynerrs << " Errors in compile\n";

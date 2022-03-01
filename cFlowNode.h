@@ -19,6 +19,13 @@ class cFlowNode : public cDeclNode
         cFlowNode(cSymbol *name, cSettingsNode *settings) 
             : cDeclNode(name) 
         {
+            std::vector<string> allowed = 
+            {"delta", "update", "min", "max", "source", "destination"};
+            std::vector<string> required = 
+            { "min", "max", "source", "destination" };
+            settings->CheckAllowedSettings(allowed);
+            settings->CheckRequiredSettings(required);
+            
             AddChild(settings);
         }
 

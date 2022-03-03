@@ -163,9 +163,7 @@ void cCodeGen::Visit(cSymbol *node)
 //*************************************************
 void cCodeGen::Visit(cSystemNode *node)
 {
-    EmitString("class " + node->GetName() + "{\n");
     node->VisitAllChildren(this);
-    EmitString("\n};\n");
 }
 //*************************************************
 void cCodeGen::Visit(cTrailerNode *node)

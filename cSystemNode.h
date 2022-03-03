@@ -22,6 +22,11 @@ class cSystemNode : public cAstNode
             AddChild(decls);
         }
 
+        string GetName()
+        {
+            return dynamic_cast<cSymbol*>(GetChild(0))->GetName();
+        }
+
         virtual string NodeType() { return string("system"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

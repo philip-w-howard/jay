@@ -1,0 +1,28 @@
+system PopSim
+{
+    start = 1900
+    end = 2000
+    
+    //perhaps native functions could be overwritten
+    
+    stock Population
+    {
+        min = 0
+        initialValue = 0
+    }
+
+    var DeathRate = 2.5
+    var BirthRate = 1.5
+    
+    flow Births
+    {
+        function = "Population*BirthRate/100"
+        end = Population
+    }    
+    
+    flow Deaths
+    {
+        function = "Population*DeathRate/100"
+        begin = Population
+    }
+}

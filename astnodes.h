@@ -24,6 +24,7 @@
 #include "cSetupNode.h"
 #include "cStockNode.h"
 #include "cSymbol.h"
+#include "cSystemsNode.h"
 #include "cSystemNode.h"
 #include "cTrailerNode.h"
 #include "cTypeNode.h"

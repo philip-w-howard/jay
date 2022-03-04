@@ -24,6 +24,7 @@ bool g_semanticErrorHappened = false;
     int             int_val;
     double          real_val;
     cAstNode*       ast_node;
+    cSystemsNode*   systems_node;
     cSystemNode*    system_node;
     cSettingsNode*  settings_node;
     cSettingNode*   setting_node;
@@ -42,7 +43,7 @@ bool g_semanticErrorHappened = false;
     cAstNode *yyast_root;
 %}
 
-%start  system
+%start  program
 
 %token SYSTEM
 %token HEADER
@@ -79,6 +80,8 @@ bool g_semanticErrorHappened = false;
 %token <real_val>  REAL_VAL
 %token <code_node> CODE
 
+%type <systems_node> program
+%type <systems_node> systems
 %type <system_node> system
 %type <decls_node> decls
 %type <decl_node> decl
@@ -97,13 +100,22 @@ bool g_semanticErrorHappened = false;
 
 %%
 
-system: SYSTEM IDENTIFIER '{' decls '}'
-                                { $$ = new cSystemNode($2, $4);
+program: systems
+                                { 
+                                  $$ = $1;
                                   yyast_root = $$;
                                   if (yynerrs == 0) 
                                       YYACCEPT;
                                   else
                                       YYABORT;
+                                }
+systems: systems system
+                                { $$ = $1; $$->AddSystem($2); }
+    |   system
+                                { $$ = new cSystemsNode($1); }
+
+system: SYSTEM IDENTIFIER '{' decls '}'
+                                { $$ = new cSystemNode($2, $4);
                                 }
 decls : decls decl
                                 { $$ = $1; $$->AddDecl($2); }

@@ -68,7 +68,7 @@ static void process_args(int argc, char **argv, args_t *args)
 {
     args->do_ast = false;
 
-    strcpy(args->output_file, "jay_genreated_output.cpp");
+    strcpy(args->output_file, "jay_generated_output.cpp");
 
     strcpy(args->ast_file, "jay_generated_output.ast");
 

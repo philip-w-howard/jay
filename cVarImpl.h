@@ -1,10 +1,21 @@
+//***************************************************
+// Definition for a class that implements Jay variables
+//
+// The class is templated, where the template variable is the 
+// system that the variable is defined in.
+
 #include <string>
 #include <unordered_map>
 using std::string;
 
+// Template variable is the Jay system the variable is defined in
 template <class T> class cVarImpl
 {
     public:
+        // dataref is a pointer to the location that maintains the variable's
+        // value
+        //
+        // object is the Jay system that the variable is defined in
         cVarImpl(string name, bool isFloat, void *dataref, T* object)
         {
             m_name = name;
@@ -25,20 +36,22 @@ template <class T> class cVarImpl
             cVarImpl::VarList[name] = this;
         }
 
+        // Add a minimum value
         void Addmin(double val)
         {
             if (m_isFloat)
                 m_d_min = val;
             else
-                m_l_min = val;
+                m_l_min = (long)val;
         }
 
+        // add a maximum value
         void Addmax(double val)
         {
             if (m_isFloat)
                 m_d_max = val;
             else
-                m_l_max = val;
+                m_l_max = (long)val;
         }
 
         void Addinitialize(double val)
@@ -79,6 +92,7 @@ template <class T> class cVarImpl
             m_do_delta = true;
         }
 
+        // This function gets called in order to update the variable
         void UpdateValue()
         {
             double d_value = 0;
@@ -101,6 +115,17 @@ template <class T> class cVarImpl
                 else
                     *m_l_dataref = ((long)d_value + l_value);
             }
+
+            if (m_isFloat)
+            {
+                if (*m_d_dataref > m_d_max) *m_d_dataref = m_d_max;
+                if (*m_d_dataref < m_d_min) *m_d_dataref = m_d_min;
+            }
+            else
+            {
+                if (*m_l_dataref > m_l_max) *m_l_dataref = m_l_max;
+                if (*m_l_dataref < m_l_min) *m_l_dataref = m_l_min;
+            }
         }
 
         static std::unordered_map<string, cVarImpl*> VarList;
@@ -109,11 +134,11 @@ template <class T> class cVarImpl
         string m_name;
         bool m_isFloat;
         double m_d_init;
-        double m_l_init;
+        long m_l_init;
         double m_d_min;
-        double m_l_min;
+        long m_l_min;
         double m_d_max;
-        double m_l_max;
+        long m_l_max;
 
         double *m_d_dataref;
         long *m_l_dataref;

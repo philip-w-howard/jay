@@ -1,6 +1,6 @@
 #pragma once
 //***************************************************
-// Definition for a class that implements Jay variables
+// Definition for a class that implements Jay stocks
 //
 // The class is templated, where the template variable is the 
 // system that the variable is defined in.
@@ -9,14 +9,14 @@
 using std::string;
 
 // Template variable is the Jay system the variable is defined in
-template <class T> class cVarImpl
+template <class T> class cStockImpl
 {
     public:
         // dataref is a pointer to the location that maintains the variable's
         // value
         //
         // object is the Jay system that the variable is defined in
-        cVarImpl(string name, bool isFloat, void *dataref, T* object)
+        cStockImpl(string name, bool isFloat, void *dataref, T* object)
         {
             m_name = name;
             m_object = object;
@@ -88,42 +88,6 @@ template <class T> class cVarImpl
         {
             m_l_func = func;
             m_do_delta = true;
-        }
-
-        // This function gets called in order to update the variable
-        void UpdateValue()
-        {
-            double d_value = 0;
-            long l_value = 0;
-
-            if (m_d_func != nullptr) d_value = (m_object->*m_d_func)();
-            if (m_l_func != nullptr) l_value = (m_object->*m_l_func)();
-
-            if (m_isFloat)
-            {
-                if (m_do_delta)
-                    *m_d_dataref += (d_value + l_value);
-                else
-                    *m_d_dataref = (d_value + l_value);
-            }
-            else
-            {
-                if (m_do_delta)
-                    *m_l_dataref += ((long)d_value + l_value);
-                else
-                    *m_l_dataref = ((long)d_value + l_value);
-            }
-
-            if (m_isFloat)
-            {
-                if (*m_d_dataref > m_d_max) *m_d_dataref = m_d_max;
-                if (*m_d_dataref < m_d_min) *m_d_dataref = m_d_min;
-            }
-            else
-            {
-                if (*m_l_dataref > m_l_max) *m_l_dataref = m_l_max;
-                if (*m_l_dataref < m_l_min) *m_l_dataref = m_l_min;
-            }
         }
     private: 
         T *m_object;

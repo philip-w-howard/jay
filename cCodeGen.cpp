@@ -15,7 +15,10 @@ static string front_matter =
     "//**********************************\n"
     "// This is the beginning of the generated code\n"
     "// There should be decls, etc. here\n"
-    "#include \"cVarImpl.h\"\n\n";
+    "#include <vector>\n"
+    "#include \"cVarImpl.h\"\n"
+    "#include \"cStockImpl.h\"\n"
+    "#include \"cFlowImpl.h\"\n";
 
 static string end_matter =
     "//**********************************\n"
@@ -37,29 +40,21 @@ cCodeGen::~cCodeGen()
 }
 
 //*************************************************
-void cCodeGen::Visit(cAstNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cCodeNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cDeclNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cDeclsNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
 void cCodeGen::Visit(cFlowNode *node)
 {
+    string output = "";
+
+    output += "cFlowImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";
+    EmitString(output);
+
+    init_body += "\n" + node->GetName() + "_Impl = " + 
+        "new cFlowImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
+        "false , nullptr, this);\n";
+
+    init_body += "m_flows.push_back(" +  node->GetName() + "_Impl);\n";
+    m_curr_decl = node->GetName();
     node->VisitAllChildren(this);
+    m_curr_decl = "";
 }
 //*************************************************
 void cCodeGen::Visit(cFuncNode *node)
@@ -80,11 +75,6 @@ void cCodeGen::Visit(cFuncNode *node)
     //node->VisitAllChildren(this);
 }
 //*************************************************
-void cCodeGen::Visit(cHeaderNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
 void cCodeGen::Visit(cIdSettingNode *node)
 {
     if (m_curr_decl != "")
@@ -92,8 +82,8 @@ void cCodeGen::Visit(cIdSettingNode *node)
         string name = node->GetName();
         if (name == "source" || name == "destination")
         {
-            init_body += m_curr_decl + "_Impl->Add" + name + "(\"" +
-                node->GetIdentifier() + "\");\n";
+            init_body += m_curr_decl + "_Impl->Add" + name + "(" +
+                node->GetIdentifier() + "_Impl);\n";
         }
         else if (name =="update" || name == "delta")
         {
@@ -109,26 +99,6 @@ void cCodeGen::Visit(cIdSettingNode *node)
     // node->VisitAllChildren(this);
 }
 //*************************************************
-void cCodeGen::Visit(cIntValNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cRealValNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cSettingNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cSettingsNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
 void cCodeGen::Visit(cSetupNode *node)
 {
     node->VisitAllChildren(this);
@@ -136,26 +106,36 @@ void cCodeGen::Visit(cSetupNode *node)
 //*************************************************
 void cCodeGen::Visit(cStockNode *node)
 {
+    string output = "";
+
     if (node->GetType()->IsFloat())
-        EmitString("static double ");
+        output += "double ";
     else
-        EmitString("static long ");
+        output += "long ";
 
-    EmitString(node->GetName());
-    EmitString(";\n");
+    output += node->GetName() + ";\n";
+    output += "cStockImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";
+    EmitString(output);
 
+    init_body += "\n" + node->GetName() + "_Impl = " + 
+        "new cStockImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
+        to_string(node->GetType()->IsFloat()) +
+        ", &" + node->GetName() + ", this);\n";
+
+    init_body += "m_stocks.push_back(" +  node->GetName() + "_Impl);\n";
+    m_curr_decl = node->GetName();
     node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cSymbol *node)
-{
-    node->VisitAllChildren(this);
+    m_curr_decl = "";
 }
 //*************************************************
 void cCodeGen::Visit(cSystemNode *node)
 {
     m_curr_system = node->GetName();
     EmitString("class " + node->GetName() + "\n{\npublic:\n");
+
+    EmitString("std::vector<cStockImpl<" + node->GetName() + ">*>m_stocks;\n");
+    EmitString("std::vector<cFlowImpl<" + node->GetName() + ">*>m_flows;\n");
+    EmitString("std::vector<cVarImpl<" + node->GetName() + ">*>m_vars;\n");
 
     node->VisitAllChildren(this);
 
@@ -167,26 +147,6 @@ void cCodeGen::Visit(cSystemNode *node)
     EmitString("\n};\n\n");
 
     m_curr_system = "";
-}
-//*************************************************
-void cCodeGen::Visit(cTrailerNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cTypeNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cUnitsNode *node)
-{
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cValueNode *node)
-{
-    node->VisitAllChildren(this);
 }
 //*************************************************
 void cCodeGen::Visit(cValueSettingNode *node)
@@ -202,18 +162,23 @@ void cCodeGen::Visit(cValueSettingNode *node)
 //*************************************************
 void cCodeGen::Visit(cVarNode *node)
 {
+    string output = "";
+
     if (node->GetType()->IsFloat())
-        EmitString("static double ");
+        output += "double ";
     else
-        EmitString("static long ");
+        output += "long ";
 
-    EmitString(node->GetName());
-    EmitString(";\n");
+    output += node->GetName() + ";\n";
+    output += "cVarImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";
+    EmitString(output);
 
-    init_body += "\ncVarImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl = " + 
+
+    init_body += "\n" + node->GetName() + "_Impl = " + 
         "new cVarImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
         to_string(node->GetType()->IsFloat()) +
         ", &" + node->GetName() + ", this);\n";
+    init_body += "m_vars.push_back(" +  node->GetName() + "_Impl);\n";
 
     m_curr_decl = node->GetName();
     node->VisitAllChildren(this);

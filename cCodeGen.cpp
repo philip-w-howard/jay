@@ -92,8 +92,8 @@ void cCodeGen::Visit(cIdSettingNode *node)
         string name = node->GetName();
         if (name == "source" || name == "destination")
         {
-            init_body += m_curr_decl + "_Impl->Add" + name + "(\"" +
-                node->GetIdentifier() + "\");\n";
+            init_body += m_curr_decl + "_Impl->Add" + name + "(" +
+                node->GetIdentifier() + "_Impl);\n";
         }
         else if (name =="update" || name == "delta")
         {
@@ -202,15 +202,19 @@ void cCodeGen::Visit(cValueSettingNode *node)
 //*************************************************
 void cCodeGen::Visit(cVarNode *node)
 {
+    string output = "";
+
     if (node->GetType()->IsFloat())
-        EmitString("static double ");
+        output += "static double ";
     else
-        EmitString("static long ");
+        output += "static long ";
 
-    EmitString(node->GetName());
-    EmitString(";\n");
+    output += node->GetName() + ";\n";
+    output += "cVarImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";
+    EmitString(output);
 
-    init_body += "\ncVarImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl = " + 
+
+    init_body += "\n" + node->GetName() + "_Impl = " + 
         "new cVarImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
         to_string(node->GetType()->IsFloat()) +
         ", &" + node->GetName() + ", this);\n";

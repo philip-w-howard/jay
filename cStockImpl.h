@@ -9,6 +9,7 @@
 using std::string;
 
 // Template variable is the Jay system the variable is defined in
+// do stocks need to be templated as well?
 template <class T> class cStockImpl
 {
     public:

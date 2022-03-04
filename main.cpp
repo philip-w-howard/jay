@@ -9,10 +9,13 @@
 // Date: Jan. 18, 2016
 //
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
+#include <cstring>
+#include <getopt.h>
 #include "cSymbolTable.h"
 #include "lex.h"
 #include "astnodes.h"
@@ -22,49 +25,119 @@
 #include "cCodeTrailer.h"
 #include "emit.h"
 
+#ifndef _GNU_SOURCE
+#error "not gnu"
+#endif
+
+static const char *JAY_VERSION = "0.0.1";
+
 // define global variables
 cSymbolTable g_symbolTable;
 long long cSymbol::nextId;
 
-// takes two string args: input_file, and output_file
-int main(int argc, char **argv)
+typedef struct
 {
-    std::cout << "Jay V 0.0\n";
+    bool do_ast;
+    char output_file[256];
+    char ast_file[256];
+    char input_file[256];
+} args_t;
 
-    int result = 0;
+//*******************************************************
+static void print_version()
+{
+    fprintf(stderr, "%s\n", JAY_VERSION);
+}
 
-    if (argc > 1)
+//*******************************************************
+static void print_help()
+{
+    fprintf(stderr, 
+            "jay <options> <input file>\n"
+            "Options can be abrieviated to a single letter\n"
+            "--ast <ast filename> generate AST file\n"
+            "--help print help message and exit\n"
+            "--version print version\n"
+            "--output <output file> specify the output file\n"
+           );
+    exit(1);
+}
+
+//*******************************************************
+static void process_args(int argc, char **argv, args_t *args)
+{
+    args->do_ast = false;
+
+    strcpy(args->output_file, "jay_genreated_output.cpp");
+
+    strcpy(args->ast_file, "jay_generated_output.ast");
+
+    strcpy(args->input_file, "");
+
+    struct option long_opts[] =
     {
-        yyin = fopen(argv[1], "r");
-        if (yyin == nullptr)
+        {"ast",     optional_argument, NULL, 'a'},    // optional
+        {"output",  required_argument, NULL, 'o'},    // required
+        {"version", no_argument, NULL, 'v'},    // no argument
+        {"help",    no_argument, NULL, 'h'},     // no argument,
+        {NULL,      0, NULL, 0}
+    };
+
+    int opt;
+    int long_index;
+
+    while ( (opt = getopt_long(argc, argv, ":a::o:vh", long_opts, &long_index)) > 0)
+    {
+        switch (opt)
         {
-            fprintf(stderr, "ERROR: Unable to open file %s\n", argv[1]);
-            exit(-1);
+            case 'a':
+                args->do_ast = true;
+                if (optarg != NULL) strcpy(args->ast_file, optarg);
+                break;
+            case 'h':
+                print_help();
+                exit(0);
+                break;
+            case 'o':
+                strcpy(args->output_file, optarg);
+                break;
+            case 'v':
+                print_version();
+                break;
+            default:
+                print_help();
+                break;
         }
     }
 
-    if (argc > 2)
+    if (optind > 0 && optind < argc)
+        strcpy(args->input_file, argv[optind]);
+    else
     {
-        FILE *output = fopen(argv[2], "w");
-        if (output == nullptr)
-        {
-            fprintf(stderr, "ERROR: Unable to open file %s\n", argv[2]);
-            exit(-1);
-        }
+        fprintf(stderr, "Must specify an input file\n");
+        exit(1);
+    }
+}
 
-        // redirect stdout to the output
-        int output_fd = fileno(output);
-        if (dup2(output_fd, 1) != 1)
-        {
-            fprintf(stderr, "Unable to duplicate the file descriptor\n");
-            exit(-2);
-        }
+//*******************************************************
+int main(int argc, char **argv)
+{
+    args_t args;
+    process_args(argc, argv, &args);
+
+    int result = 0;
+
+    yyin = fopen(args.input_file, "r");
+    if (yyin == nullptr)
+    {
+        fprintf(stderr, "ERROR: Unable to open file %s\n", argv[1]);
+        exit(-1);
     }
 
     result = yyparse();
     if (yyast_root != nullptr && result == 0 && yynerrs == 0)
     {
-        InitOutput("outputfile.cpp");
+        InitOutput(args.output_file);
 
         cCodeHeader header;
         yyast_root->Visit(&header);
@@ -80,7 +153,17 @@ int main(int argc, char **argv)
 
         FinalizeOutput();
 
-        std::cout << yyast_root->ToString() << std::endl;
+        if (args.do_ast)
+        {
+            std::ofstream ast(args.ast_file);
+            if (!ast.good())
+            {
+                fprintf(stderr, "Unable to open AST file: %s\n", args.ast_file);
+                exit(1);
+            }
+            ast << yyast_root->ToString() << std::endl;
+            ast.close();
+        }
     } else {
         std::cout << yynerrs << " Errors in compile\n";
     }

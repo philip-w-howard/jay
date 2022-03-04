@@ -109,9 +109,9 @@ void cCodeGen::Visit(cStockNode *node)
     string output = "";
 
     if (node->GetType()->IsFloat())
-        output += "static double ";
+        output += "double ";
     else
-        output += "static long ";
+        output += "long ";
 
     output += node->GetName() + ";\n";
     output += "cStockImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";
@@ -165,9 +165,9 @@ void cCodeGen::Visit(cVarNode *node)
     string output = "";
 
     if (node->GetType()->IsFloat())
-        output += "static double ";
+        output += "double ";
     else
-        output += "static long ";
+        output += "long ";
 
     output += node->GetName() + ";\n";
     output += "cVarImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";

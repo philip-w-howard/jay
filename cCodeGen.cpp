@@ -39,9 +39,6 @@ cCodeGen::cCodeGen() : cVisitor()
 //*************************************************
 cCodeGen::~cCodeGen()
 {
-    EmitString(init_header);
-    EmitString(init_body);
-    EmitString(init_trailer);
     EmitString(end_matter);
 }
 
@@ -107,7 +104,7 @@ void cCodeGen::Visit(cIdSettingNode *node)
         else if (name =="update" || name == "delta")
         {
             init_body += m_curr_decl + "_Impl->Add" + name + "(" +
-                node->GetIdentifier() + ");\n";
+                "&" + m_curr_system + "::" + node->GetIdentifier() + ");\n";
         }
         else
         {
@@ -163,7 +160,19 @@ void cCodeGen::Visit(cSymbol *node)
 //*************************************************
 void cCodeGen::Visit(cSystemNode *node)
 {
+    m_curr_system = node->GetName();
+    EmitString("class " + node->GetName() + "\n{\npublic:\n");
+
     node->VisitAllChildren(this);
+
+    EmitString(init_header);
+    EmitString(init_body);
+    EmitString(init_trailer);
+    init_body = "";
+
+    EmitString("\n};\n\n");
+
+    m_curr_system = "";
 }
 //*************************************************
 void cCodeGen::Visit(cTrailerNode *node)
@@ -207,10 +216,10 @@ void cCodeGen::Visit(cVarNode *node)
     EmitString(node->GetName());
     EmitString(";\n");
 
-    init_body += "\ncVarImpl *" + node->GetName() + "_Impl = " + 
-        "new cVarImpl( \"" + node->GetName() + "\", " + 
+    init_body += "\ncVarImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl = " + 
+        "new cVarImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
         to_string(node->GetType()->IsFloat()) +
-        ", &" + node->GetName() + ");\n";
+        ", &" + node->GetName() + ", this);\n";
 
     m_curr_decl = node->GetName();
     node->VisitAllChildren(this);

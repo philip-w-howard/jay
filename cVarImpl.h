@@ -2,12 +2,13 @@
 #include <unordered_map>
 using std::string;
 
-class cVarImpl
+template <class T> class cVarImpl
 {
     public:
-        cVarImpl(string name, bool isFloat, void *dataref)
+        cVarImpl(string name, bool isFloat, void *dataref, T* object)
         {
             m_name = name;
+            m_object = object;
             m_do_delta = true;
 
             if (isFloat)
@@ -54,25 +55,25 @@ class cVarImpl
             }
         }
 
-        void Addupdate(double (*func)())
+        void Addupdate(double (T::*func)())
         {
             m_d_func = func;
             m_do_delta = false;
         }
 
-        void Addupdate(long (*func)())
+        void Addupdate(long (T::*func)())
         {
             m_l_func = func;
             m_do_delta = false;
         }
 
-        void Adddelta(double (*func)())
+        void Adddelta(double (T::*func)())
         {
             m_d_func = func;
             m_do_delta = true;
         }
 
-        void Adddelta(long (*func)())
+        void Adddelta(long (T::*func)())
         {
             m_l_func = func;
             m_do_delta = true;
@@ -83,8 +84,8 @@ class cVarImpl
             double d_value = 0;
             long l_value = 0;
 
-            if (m_d_func != nullptr) d_value = m_d_func();
-            if (m_l_func != nullptr) l_value = m_l_func();
+            if (m_d_func != nullptr) d_value = (m_object->*m_d_func)();
+            if (m_l_func != nullptr) l_value = (m_object->*m_l_func)();
 
             if (m_isFloat)
             {
@@ -104,6 +105,7 @@ class cVarImpl
 
         static std::unordered_map<string, cVarImpl*> VarList;
     private: 
+        T *m_object;
         string m_name;
         bool m_isFloat;
         double m_d_init;
@@ -116,8 +118,8 @@ class cVarImpl
         double *m_d_dataref;
         long *m_l_dataref;
 
-        double (*m_d_func)() = nullptr;
-        long (*m_l_func)() = nullptr;
+        double (T::*m_d_func)() = nullptr;
+        long (T::*m_l_func)() = nullptr;
         bool m_do_delta;
 };
 

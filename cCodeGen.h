@@ -42,4 +42,5 @@ class cCodeGen : public cVisitor
         { return val ? "true" : "false"; }
 
         std::string m_curr_decl;
+        std::string m_curr_system;
 };

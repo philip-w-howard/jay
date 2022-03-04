@@ -22,12 +22,6 @@ static string end_matter =
     "// This is the ending of the generated code\n"
     "// There should be a close curly here\n";
 
-static string init_header =
-    "\nvoid InitTables() {\n";
-
-static string init_trailer =
-    "}\n";
-
 static string init_body = "";
 
 //*************************************************
@@ -165,9 +159,9 @@ void cCodeGen::Visit(cSystemNode *node)
 
     node->VisitAllChildren(this);
 
-    EmitString(init_header);
+    EmitString(m_curr_system + "()\n{\n");
     EmitString(init_body);
-    EmitString(init_trailer);
+    EmitString("\n}\n");
     init_body = "";
 
     EmitString("\n};\n\n");

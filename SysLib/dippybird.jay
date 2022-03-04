@@ -1,0 +1,90 @@
+// a model of a popular desk toy
+// very basic, and probably incorrect. just for syntax demonstration
+
+system dippingBird
+{
+    start = 0;
+    end = INF; 
+    time_unit = "milisecond(s)";
+
+    stock waterCup
+    {
+        min = 0;
+        max = 100000;
+        initial = 100000;
+    }
+
+    stock beakTip
+    {
+        min = 0;
+        max = 100;
+        initial = 100;
+        //unit = 
+    }
+
+    stock waterOnHead
+    {
+        min = 0;
+        max = 100;
+        initial = 0;
+    }
+
+    stock upperFluid
+    {
+        min = 0;
+        max = 100;
+        initial = 0;
+    
+    }
+
+    stock lowerFluid
+    {
+        min = 0;
+        max = 100;
+        initial = 100;
+    }
+
+    var GasTemp
+    {
+        func = "-waterOnHead";
+    }
+
+    var Angle
+    {
+        //math functions (sin(), cos(), sqrt()) throw a bit of a wrench in the works, huh?
+        //feel free to reformat if you think it's for the best
+        func = "sin(upperFluid / lowerFluid)"; //gobbledegook
+        min = -90;
+        max = 90;
+    }
+
+    //this is a funny one. an if statement (if angle < X) would be very useful here
+    //insight maker has a "state" object that coud be the basis for another type here. 
+    flow Absorbtion
+    {
+        min = 0;
+        max = 999;
+        func = "tan(Angle)";
+        source = waterCup;
+        end = beakTip;
+    }
+
+    flow CapAction
+    {
+        min = 0;
+        max = 10; //only so much throughput
+        func = "10";
+        source = beakTip;
+        end = waterOnHead;
+    }
+
+    flow fluidFlow
+    {
+        min = -10; //can go negative
+        max = 10;
+        func = "GasTemp + Angle";
+        source = beakTip;
+        end = waterOnHead;
+    }
+
+}

@@ -1,0 +1,1 @@
+multipe flows pulling from one stock leads to bad behavior, false priority.

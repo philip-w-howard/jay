@@ -1,0 +1,82 @@
+There should be multiple systems to be “fed” into the interpreter. The focus is on the language. Provide 6 models to act as test code
+Coffee cooling down
+Coffee considering multiple flows to account for multiple forms of heat loss
+Complex Population model
+Software development model
+Village Economic model
+World3 (from insight maker)
+
+A systems dynamics language (or library) must support the fundamental elements of a dynamic model. These elements could be contained in a System, allowing easier management of multiple systems (perhaps later, systems could contain systems?). 
+
+System
+    Time Scale / duration
+    Stocks (to represent quantities)
+        Capacity with min/max
+        negative/non negative
+        initial/current value
+        Delays
+    Flows (to move quantities between stocks)
+        Functions (to determine rate of flow per time)
+    Variables (inputs)
+        Pointer/reference to modify value externally
+
+What functionalities must the language support?
+- defining dynamic systems
+        
+What functionalities must the library/c++ equivalent output support?
+- controling the system
+    - running a number of steps forward
+    - reading variables, stocks, etc...
+    - changing elements of the system at run-time
+    
+Linear UML Diagram
+
+System
+{
+    int start
+    int end
+    
+    stocks []
+    flows []
+    variables []
+    //or some other structure to contain them
+    // i.e. Graph of some sort?
+}
+
+stock
+{
+
+}
+        
+let's model population births and deaths
+
+system PopSim
+{
+    start = 1900
+    end = 2000
+    
+    //perhaps native functions could be overwritten
+    
+    stock Population
+    {
+        min = 0
+        initialValue = 0
+    }
+
+    var DeathRate = 2.5
+    var BirthRate = 1.5
+    
+    flow Births
+    {
+        function = "Population*BirthRate/100"
+        end = Population
+    }    
+    
+    flow Deaths
+    {
+        function = "Population*DeathRate/100"
+        begin = Population
+    }
+}
+
+this structure seems sufficent. to keep models

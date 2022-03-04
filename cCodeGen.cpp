@@ -15,7 +15,9 @@ static string front_matter =
     "//**********************************\n"
     "// This is the beginning of the generated code\n"
     "// There should be decls, etc. here\n"
-    "#include \"cVarImpl.h\"\n\n";
+    "#include \"cVarImpl.h\"\n\n"
+    "#include \"cStockImpl.h\"\n\n"
+    "#include \"cFlowImpl.h\"\n\n";
 
 static string end_matter =
     "//**********************************\n"
@@ -59,7 +61,18 @@ void cCodeGen::Visit(cDeclsNode *node)
 //*************************************************
 void cCodeGen::Visit(cFlowNode *node)
 {
+    string output = "";
+
+    output += "cFlowImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";
+    EmitString(output);
+
+    init_body += "\n" + node->GetName() + "_Impl = " + 
+        "new cFlowImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
+        "false , nullptr, this);\n";
+
+    m_curr_decl = node->GetName();
     node->VisitAllChildren(this);
+    m_curr_decl = "";
 }
 //*************************************************
 void cCodeGen::Visit(cFuncNode *node)
@@ -82,7 +95,8 @@ void cCodeGen::Visit(cFuncNode *node)
 //*************************************************
 void cCodeGen::Visit(cHeaderNode *node)
 {
-    node->VisitAllChildren(this);
+    // cHeader visitor takes care of emitting header code
+    //node->VisitAllChildren(this);
 }
 //*************************************************
 void cCodeGen::Visit(cIdSettingNode *node)
@@ -136,15 +150,25 @@ void cCodeGen::Visit(cSetupNode *node)
 //*************************************************
 void cCodeGen::Visit(cStockNode *node)
 {
+    string output = "";
+
     if (node->GetType()->IsFloat())
-        EmitString("static double ");
+        output += "static double ";
     else
-        EmitString("static long ");
+        output += "static long ";
 
-    EmitString(node->GetName());
-    EmitString(";\n");
+    output += node->GetName() + ";\n";
+    output += "cStockImpl<" + m_curr_system + "> *" + node->GetName() + "_Impl;\n";
+    EmitString(output);
 
+    init_body += "\n" + node->GetName() + "_Impl = " + 
+        "new cStockImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
+        to_string(node->GetType()->IsFloat()) +
+        ", &" + node->GetName() + ", this);\n";
+
+    m_curr_decl = node->GetName();
     node->VisitAllChildren(this);
+    m_curr_decl = "";
 }
 //*************************************************
 void cCodeGen::Visit(cSymbol *node)
@@ -171,7 +195,8 @@ void cCodeGen::Visit(cSystemNode *node)
 //*************************************************
 void cCodeGen::Visit(cTrailerNode *node)
 {
-    node->VisitAllChildren(this);
+    // cTrailer visitor takes care of emiting trailer code
+    //node->VisitAllChildren(this);
 }
 //*************************************************
 void cCodeGen::Visit(cTypeNode *node)

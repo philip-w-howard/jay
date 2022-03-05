@@ -38,6 +38,7 @@ long long cSymbol::nextId;
 typedef struct
 {
     bool do_ast;
+    bool do_pretty;
     char output_file[256];
     char ast_file[256];
     char input_file[256];
@@ -59,6 +60,7 @@ static void print_help()
             "--help print help message and exit\n"
             "--version print version\n"
             "--output <output file> specify the output file\n"
+            "--pretty  pretty print the AST (implies --ast)\n"
            );
     exit(1);
 }
@@ -67,8 +69,9 @@ static void print_help()
 static void process_args(int argc, char **argv, args_t *args)
 {
     args->do_ast = false;
+    args->do_pretty = false;
 
-    strcpy(args->output_file, "jay_genreated_output.cpp");
+    strcpy(args->output_file, "jay_generated_output.cpp");
 
     strcpy(args->ast_file, "jay_generated_output.ast");
 
@@ -80,13 +83,14 @@ static void process_args(int argc, char **argv, args_t *args)
         {"output",  required_argument, NULL, 'o'},    // required
         {"version", no_argument, NULL, 'v'},    // no argument
         {"help",    no_argument, NULL, 'h'},     // no argument,
+        {"pretty",  no_argument, NULL, 'p'},     // no argument,
         {NULL,      0, NULL, 0}
     };
 
     int opt;
     int long_index;
 
-    while ( (opt = getopt_long(argc, argv, ":a::o:vh", long_opts, &long_index)) > 0)
+    while ( (opt = getopt_long(argc, argv, ":a::o:vhp", long_opts, &long_index)) > 0)
     {
         switch (opt)
         {
@@ -100,6 +104,10 @@ static void process_args(int argc, char **argv, args_t *args)
                 break;
             case 'o':
                 strcpy(args->output_file, optarg);
+                break;
+            case 'p':
+                args->do_ast = true;
+                args->do_pretty = true;
                 break;
             case 'v':
                 print_version();
@@ -163,6 +171,19 @@ int main(int argc, char **argv)
             }
             ast << yyast_root->ToString() << std::endl;
             ast.close();
+
+            if (args.do_pretty)
+            {
+                char cmd[200] = "xmllint --format ";
+                strcat(cmd, args.ast_file);
+                strcat(cmd, " -o ");
+                strcat(cmd, args.ast_file);
+                int sysresult = system(cmd);
+                if (sysresult != 0)
+                {
+                    fprintf(stderr, "Unable to pretty print the AST\n");
+                }
+            }
         }
     } else {
         std::cout << yynerrs << " Errors in compile\n";

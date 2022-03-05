@@ -8,10 +8,13 @@ Semantic checks for:
 
 Visitor
     Semantics?
-    Code Gen
 
 Test suite
 Command line options
     ast
         xmllint output
+
+grammar code snippets for subsystem
+code gen for subsystem
+    sort out SysVar vs Output
 

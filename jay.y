@@ -21,19 +21,26 @@ bool g_semanticErrorHappened = false;
 
  /* union defines the type for lexical values */
 %union{
-    int             int_val;
-    double          real_val;
-    cAstNode*       ast_node;
-    cSystemNode*    system_node;
-    cSettingsNode*  settings_node;
-    cSettingNode*   setting_node;
-    cDeclsNode*     decls_node;
-    cDeclNode*      decl_node;
-    cCodeNode*      code_node;
-    cSymbol*        symbol;
-    cValueNode*     value;
-    cTypeNode*      type;
-    cUnitsNode*     units;
+    int                 int_val;
+    double              real_val;
+    cAstNode*           ast_node;
+    cSystemsNode*       systems_node;
+    cSystemNode*        system_node;
+    cSettingsNode*      settings_node;
+    cSettingNode*       setting_node;
+    cDeclsNode*         decls_node;
+    cDeclNode*          decl_node;
+    cCodeNode*          code_node;
+    cProgramNode*       program_node;
+    cSimulationNode*    sim_node;
+    cSystemsListNode*   syslist_node;
+    cSysVarNode*        sysvar_node;
+    cSysVarsNode*       sysvars_node;
+    cSymbol*            symbol;
+    cValueNode*         value;
+    cTypeNode*          type;
+    cUnitsNode*         units;
+    std::string*        string;
     }
 
 %{
@@ -42,7 +49,7 @@ bool g_semanticErrorHappened = false;
     cAstNode *yyast_root;
 %}
 
-%start  system
+%start  program
 
 %token SYSTEM
 %token HEADER
@@ -72,13 +79,21 @@ bool g_semanticErrorHappened = false;
 %token HOURS
 %token DAYS
 %token YEARS
+%token SIMULATION
+%token SYSTEMS
+%token LOG
+%token CSV
+
 %token JUNK_TOKEN
 
 %token <symbol>    IDENTIFIER
 %token <int_val>   INT_VAL
 %token <real_val>  REAL_VAL
 %token <code_node> CODE
+%token <string>    STR_CONST
 
+%type <program_node> program
+%type <systems_node> systems
 %type <system_node> system
 %type <decls_node> decls
 %type <decl_node> decl
@@ -95,31 +110,65 @@ bool g_semanticErrorHappened = false;
 %type <type> type
 %type <units> units
 
+%type <sim_node> simulation
+%type <decls_node> simdecls
+%type <decl_node> simdecl
+%type <decl_node> log
+%type <decl_node> csv
+%type <sysvars_node> sysvars
+%type <sysvar_node> sysvar
+%type <syslist_node> systemlist
+
 %%
 
-system: SYSTEM IDENTIFIER '{' decls '}'
-                                { $$ = new cSystemNode($2, $4);
+program: systems simulation
+                                { 
+                                  $$ = new cProgramNode($1, $2);
                                   yyast_root = $$;
                                   if (yynerrs == 0) 
                                       YYACCEPT;
                                   else
                                       YYABORT;
                                 }
+systems: systems system
+                                { $$ = $1; $$->AddSystem($2); }
+    |   system
+                                { $$ = new cSystemsNode($1); }
+
+system: SYSTEM IDENTIFIER '{' decls '}'
+                                { $$ = new cSystemNode($2, $4); }
+simulation: SIMULATION '{' simdecls '}'
+                                { $$ = new cSimulationNode($3); }
+    |   /* empty */
+                                { $$ = nullptr; }
 decls : decls decl
                                 { $$ = $1; $$->AddDecl($2); }
     |   decl
                                 { $$ = new cDeclsNode($1); }
+simdecls : simdecls simdecl
+                                { $$ = $1; $$->AddDecl($2); }
+    |   simdecl
+                                { $$ = new cDeclsNode($1); }
 decl :  stock
                                 { $$ = $1; }
     |   flow
-                                { $$ = $1; }
-    |   setup
                                 { $$ = $1; }
     |   var
                                 { $$ = $1; }
     |   func
                                 { $$ = $1; }
     |   header
+                                { $$ = $1; }
+    |   trailer
+                                { $$ = $1; }
+
+simdecl :  systemlist
+                                { $$ = $1; }
+    |   setup
+                                { $$ = $1; }
+    |   log
+                                { $$ = $1; }
+    |   csv
                                 { $$ = $1; }
     |   trailer
                                 { $$ = $1; }
@@ -138,7 +187,18 @@ header : HEADER CODE
                                 { $$ = new cHeaderNode($2); }
 trailer : TRAILER CODE 
                                 { $$ = new cTrailerNode($2); }
-
+log : LOG ':' INT_VAL '{' settings '}'
+                                { $$ = new cOutputListNode("log", $3, $5); }
+csv : CSV ':' INT_VAL '{' settings '}'
+                                { $$ = new cOutputListNode("csv", $3, $5); }
+systemlist : SYSTEMS '{' sysvars '}'
+                                { $$ = new cSystemsListNode($3); }
+sysvars : sysvars sysvar
+                                { $$ = $1; $$->AddSystem($2); }
+        | sysvar
+                                { $$ = new cSysVarsNode($1); }
+sysvar : IDENTIFIER IDENTIFIER ';'
+                                { $$ = new cSysVarNode($1, $2); }
 settings : settings setting
                                 { $$ = $1; $$->AddSetting($2); }
     |      setting
@@ -164,6 +224,8 @@ setting : MIN '=' value ';'
                                 { $$ = new cIdSettingNode("delta", $3); }
         | UNITS '=' units ';'
                                 {  $$ = $3; }
+        | IDENTIFIER '.' IDENTIFIER STR_CONST ';'
+                                { $$ = new cOutputNode($1, $3, $4); }
         | error ';'
                                 { $$ = nullptr; }
 value : INT_VAL

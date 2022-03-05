@@ -144,6 +144,15 @@ void cCodeGen::Visit(cSystemNode *node)
     EmitString("\n}\n");
     init_body = "";
 
+    EmitString(
+            "void Step()\n"
+            "{\n"
+            "   for (auto var : m_vars)\n"
+            "       var->Step();\n"
+            "   for (auto flow : m_flows)\n"
+            "       flow->Step();\n"
+            "}\n"
+            );
     EmitString("\n};\n\n");
 
     m_curr_system = "";

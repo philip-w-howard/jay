@@ -16,5 +16,25 @@ Command line options
 
 grammar code snippets for subsystem
 code gen for subsystem
-    sort out SysVar vs Output
+    system: step()
+    _Impl: update()
+    log
+        AddItem(&long, string format);
+        Output()
+    csv subclass log. Override Output()
+
+    main
+        vars: start, end
+        log, csv = nullptr;
+        objects: systems
+        log: create log
+            add items
+        csv: create csv
+            add items
+
+        for start .. end
+            obj1.step()
+            obj2.step()
+            log->Output(index)
+            csv->Output(index)
 

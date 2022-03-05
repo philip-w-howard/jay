@@ -101,6 +101,8 @@ template <class T> class cFlowImpl
         {
             m_destination = destination;
         }
+
+        void Step() {}
     private: 
         T *m_object;
         string m_name;

@@ -21,6 +21,7 @@
 int Return(int val);
 int ProcessIdentifier(const char *name);
 int ProcessCode(const char *text);
+int ProcessString(string text);
 //YYSTYPE yylval;
 %}
 
@@ -29,13 +30,17 @@ int ProcessCode(const char *text);
 %option nounput
 %option yylineno
 
-OPERATOR          [=;:{}"<>]
+OPERATOR          [=;:{}<>\.]
 
 %%
 
 [ \t\n\r]                   {} // ignore whitespace
 "//".*                      {} // ignore comments
 system                      DO_RETURN(SYSTEM);
+systems                     DO_RETURN(SYSTEMS);
+simulation                  DO_RETURN(SIMULATION);
+log                         DO_RETURN(LOG);
+csv                         DO_RETURN(CSV);
 start                       DO_RETURN(START);
 header                      DO_RETURN(HEADER);
 trailer                     DO_RETURN(TRAILER);
@@ -73,6 +78,7 @@ years                       DO_RETURN(YEARS);
                             }
 {OPERATOR}                  DO_RETURN(yytext[0]);
 "$"[^$]+"$"                 DO_RETURN(ProcessCode(yytext));
+["][^"]*["]                 DO_RETURN(ProcessString(yytext));
 .                           DO_RETURN(JUNK_TOKEN);
 
 %%
@@ -102,3 +108,12 @@ int ProcessCode(const char *text)
 
     return CODE;
 }
+int ProcessString(string text)
+{
+    // delete the quotes
+    text = text.substr(1, text.length()-2);
+
+    yylval.string = new string(text);
+
+    return STR_CONST;
+} 

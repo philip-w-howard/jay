@@ -38,3 +38,5 @@ code gen for subsystem
             log->Output(index)
             csv->Output(index)
 
+allow multiple logs and csv's
+add name to LOG, CSV

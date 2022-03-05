@@ -99,7 +99,50 @@ void cCodeGen::Visit(cIdSettingNode *node)
     // node->VisitAllChildren(this);
 }
 //*************************************************
+void cCodeGen::Visit(cOutputListNode *node)
+{
+    if (node->GetType() == "log")
+    {
+        EmitString("Log *" + node->GetName() + " = new Log(\"" + 
+                node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
+    }
+    else if (node->GetType() == "ast")
+    {
+        EmitString("Log *" + node->GetName() + " = new Log(\"" + 
+                node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
+    }
+    else
+    {
+        fprintf(stderr, "Invalid type of output\n");
+    }
+
+    m_curr_decl = node->GetName();
+    node->VisitAllChildren(this);
+    m_curr_decl = "";
+}
+//*************************************************
+void cCodeGen::Visit(cOutputNode *node)
+{
+    EmitString(m_curr_decl + "->AddChild(&" + node->GetName() + ", \"" + 
+            node->GetFormat() + "\");\n");
+}
+//*************************************************
 void cCodeGen::Visit(cSetupNode *node)
+{
+    node->VisitAllChildren(this);
+}
+//*************************************************
+void cCodeGen::Visit(cSimulationNode *node)
+{
+    node->VisitAllChildren(this);
+}
+//*************************************************
+void cCodeGen::Visit(cSysVarNode *node)
+{
+    node->VisitAllChildren(this);
+}
+//*************************************************
+void cCodeGen::Visit(cSystemsListNode *node)
 {
     node->VisitAllChildren(this);
 }

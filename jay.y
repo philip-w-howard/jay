@@ -187,10 +187,10 @@ header : HEADER CODE
                                 { $$ = new cHeaderNode($2); }
 trailer : TRAILER CODE 
                                 { $$ = new cTrailerNode($2); }
-log : LOG ':' INT_VAL '{' settings '}'
-                                { $$ = new cOutputListNode("log", $3, $5); }
-csv : CSV ':' INT_VAL '{' settings '}'
-                                { $$ = new cOutputListNode("csv", $3, $5); }
+log : LOG IDENTIFIER ':' INT_VAL '{' settings '}'
+                                { $$ = new cOutputListNode($2, $4, $6, "log"); }
+csv : CSV IDENTIFIER ':' INT_VAL '{' settings '}'
+                                { $$ = new cOutputListNode($2, $4, $6, "ast"); }
 systemlist : SYSTEMS '{' sysvars '}'
                                 { $$ = new cSystemsListNode($3); }
 sysvars : sysvars sysvar

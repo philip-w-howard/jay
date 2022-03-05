@@ -69,7 +69,7 @@ hours                       DO_RETURN(HOURS);
 days                        DO_RETURN(DAYS);
 years                       DO_RETURN(YEARS);
 
-[a-zA-Z][a-zA-Z0-9]*        DO_RETURN(ProcessIdentifier(yytext));
+[_a-zA-Z][_a-zA-Z0-9]*        DO_RETURN(ProcessIdentifier(yytext));
 -?[0-9]+                    { yylval.int_val = atoi(yytext); 
                               DO_RETURN(INT_VAL);
                             }

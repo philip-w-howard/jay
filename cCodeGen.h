@@ -18,9 +18,14 @@ class cCodeGen : public cVisitor
         virtual void Visit(cFlowNode *node);
         virtual void Visit(cFuncNode *node);
         virtual void Visit(cIdSettingNode *node);
+        virtual void Visit(cOutputListNode *node);
+        virtual void Visit(cOutputNode *node);
+        virtual void Visit(cSimulationNode *node);
         virtual void Visit(cSetupNode *node);
         virtual void Visit(cStockNode *node);
+        virtual void Visit(cSystemsListNode *node);
         virtual void Visit(cSystemNode *node);
+        virtual void Visit(cSysVarNode *node);
         virtual void Visit(cValueSettingNode *node);
         virtual void Visit(cVarNode *node);
     protected:

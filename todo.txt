@@ -16,8 +16,8 @@ Command line options
 
 grammar code snippets for subsystem
 code gen for subsystem
-    system: step()
-    _Impl: update()
+     system: step()     xxx
+    _Impl: update()     xxx
     log
         AddItem(&long, string format);
         Output()

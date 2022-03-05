@@ -20,6 +20,7 @@
 #include "cIntValNode.h"
 #include "cOutputListNode.h"
 #include "cOutputNode.h"
+#include "cProgramNode.h"
 #include "cRealValNode.h"
 #include "cSettingNode.h"
 #include "cSettingsNode.h"

@@ -21,25 +21,26 @@ bool g_semanticErrorHappened = false;
 
  /* union defines the type for lexical values */
 %union{
-    int             int_val;
-    double          real_val;
-    cAstNode*       ast_node;
-    cSystemsNode*   systems_node;
-    cSystemNode*    system_node;
-    cSettingsNode*  settings_node;
-    cSettingNode*   setting_node;
-    cDeclsNode*     decls_node;
-    cDeclNode*      decl_node;
-    cCodeNode*      code_node;
+    int                 int_val;
+    double              real_val;
+    cAstNode*           ast_node;
+    cSystemsNode*       systems_node;
+    cSystemNode*        system_node;
+    cSettingsNode*      settings_node;
+    cSettingNode*       setting_node;
+    cDeclsNode*         decls_node;
+    cDeclNode*          decl_node;
+    cCodeNode*          code_node;
+    cProgramNode*       program_node;
     cSimulationNode*    sim_node;
     cSystemsListNode*   syslist_node;
-    cSysVarNode*    sysvar_node;
-    cSysVarsNode*   sysvars_node;
-    cSymbol*        symbol;
-    cValueNode*     value;
-    cTypeNode*      type;
-    cUnitsNode*     units;
-    std::string*    string;
+    cSysVarNode*        sysvar_node;
+    cSysVarsNode*       sysvars_node;
+    cSymbol*            symbol;
+    cValueNode*         value;
+    cTypeNode*          type;
+    cUnitsNode*         units;
+    std::string*        string;
     }
 
 %{
@@ -91,7 +92,7 @@ bool g_semanticErrorHappened = false;
 %token <code_node> CODE
 %token <string>    STR_CONST
 
-%type <systems_node> program
+%type <program_node> program
 %type <systems_node> systems
 %type <system_node> system
 %type <decls_node> decls
@@ -122,7 +123,7 @@ bool g_semanticErrorHappened = false;
 
 program: systems simulation
                                 { 
-                                  $$ = $1;
+                                  $$ = new cProgramNode($1, $2);
                                   yyast_root = $$;
                                   if (yynerrs == 0) 
                                       YYACCEPT;
@@ -138,6 +139,8 @@ system: SYSTEM IDENTIFIER '{' decls '}'
                                 { $$ = new cSystemNode($2, $4); }
 simulation: SIMULATION '{' simdecls '}'
                                 { $$ = new cSimulationNode($3); }
+    |   /* empty */
+                                { $$ = nullptr; }
 decls : decls decl
                                 { $$ = $1; $$->AddDecl($2); }
     |   decl

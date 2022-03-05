@@ -24,6 +24,6 @@ class cSimulationNode : public cAstNode
         cDeclsNode *GetDecls() 
         { return dynamic_cast<cDeclsNode*>(GetChild(0)); }
 
-        virtual string NodeType() { return string("system"); }
+        virtual string NodeType() { return string("simulation"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

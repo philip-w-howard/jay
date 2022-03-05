@@ -60,6 +60,7 @@ static void print_help()
             "--help print help message and exit\n"
             "--version print version\n"
             "--output <output file> specify the output file\n"
+            "--pretty  pretty print the AST (implies --ast)\n"
            );
     exit(1);
 }
@@ -89,7 +90,7 @@ static void process_args(int argc, char **argv, args_t *args)
     int opt;
     int long_index;
 
-    while ( (opt = getopt_long(argc, argv, ":a::o:vh", long_opts, &long_index)) > 0)
+    while ( (opt = getopt_long(argc, argv, ":a::o:vhp", long_opts, &long_index)) > 0)
     {
         switch (opt)
         {

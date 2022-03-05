@@ -23,6 +23,7 @@ class cIntValNode : public cValueNode
             m_value = value;
         }
 
+        long GetVal() { return m_value; }
         virtual string GetTextValue() { return std::to_string(m_value); }
         virtual string AttributesToString() 
         {

@@ -31,10 +31,15 @@ bool g_semanticErrorHappened = false;
     cDeclsNode*     decls_node;
     cDeclNode*      decl_node;
     cCodeNode*      code_node;
+    cSimulationNode*    sim_node;
+    cSystemsListNode*   syslist_node;
+    cSysVarNode*    sysvar_node;
+    cSysVarsNode*   sysvars_node;
     cSymbol*        symbol;
     cValueNode*     value;
     cTypeNode*      type;
     cUnitsNode*     units;
+    std::string*    string;
     }
 
 %{
@@ -73,12 +78,18 @@ bool g_semanticErrorHappened = false;
 %token HOURS
 %token DAYS
 %token YEARS
+%token SIMULATION
+%token SYSTEMS
+%token LOG
+%token CSV
+
 %token JUNK_TOKEN
 
 %token <symbol>    IDENTIFIER
 %token <int_val>   INT_VAL
 %token <real_val>  REAL_VAL
 %token <code_node> CODE
+%token <string>    STR_CONST
 
 %type <systems_node> program
 %type <systems_node> systems
@@ -98,9 +109,18 @@ bool g_semanticErrorHappened = false;
 %type <type> type
 %type <units> units
 
+%type <sim_node> simulation
+%type <decls_node> simdecls
+%type <decl_node> simdecl
+%type <decl_node> log
+%type <decl_node> csv
+%type <sysvars_node> sysvars
+%type <sysvar_node> sysvar
+%type <syslist_node> systemlist
+
 %%
 
-program: systems
+program: systems simulation
                                 { 
                                   $$ = $1;
                                   yyast_root = $$;
@@ -115,23 +135,37 @@ systems: systems system
                                 { $$ = new cSystemsNode($1); }
 
 system: SYSTEM IDENTIFIER '{' decls '}'
-                                { $$ = new cSystemNode($2, $4);
-                                }
+                                { $$ = new cSystemNode($2, $4); }
+simulation: SIMULATION '{' simdecls '}'
+                                { $$ = new cSimulationNode($3); }
 decls : decls decl
                                 { $$ = $1; $$->AddDecl($2); }
     |   decl
                                 { $$ = new cDeclsNode($1); }
+simdecls : simdecls simdecl
+                                { $$ = $1; $$->AddDecl($2); }
+    |   simdecl
+                                { $$ = new cDeclsNode($1); }
 decl :  stock
                                 { $$ = $1; }
     |   flow
-                                { $$ = $1; }
-    |   setup
                                 { $$ = $1; }
     |   var
                                 { $$ = $1; }
     |   func
                                 { $$ = $1; }
     |   header
+                                { $$ = $1; }
+    |   trailer
+                                { $$ = $1; }
+
+simdecl :  systemlist
+                                { $$ = $1; }
+    |   setup
+                                { $$ = $1; }
+    |   log
+                                { $$ = $1; }
+    |   csv
                                 { $$ = $1; }
     |   trailer
                                 { $$ = $1; }
@@ -150,7 +184,18 @@ header : HEADER CODE
                                 { $$ = new cHeaderNode($2); }
 trailer : TRAILER CODE 
                                 { $$ = new cTrailerNode($2); }
-
+log : LOG ':' INT_VAL '{' settings '}'
+                                { $$ = new cOutputListNode("log", $3, $5); }
+csv : CSV ':' INT_VAL '{' settings '}'
+                                { $$ = new cOutputListNode("csv", $3, $5); }
+systemlist : SYSTEMS '{' sysvars '}'
+                                { $$ = new cSystemsListNode($3); }
+sysvars : sysvars sysvar
+                                { $$ = $1; $$->AddSystem($2); }
+        | sysvar
+                                { $$ = new cSysVarsNode($1); }
+sysvar : IDENTIFIER IDENTIFIER ';'
+                                { $$ = new cSysVarNode($1, $2); }
 settings : settings setting
                                 { $$ = $1; $$->AddSetting($2); }
     |      setting
@@ -176,6 +221,8 @@ setting : MIN '=' value ';'
                                 { $$ = new cIdSettingNode("delta", $3); }
         | UNITS '=' units ';'
                                 {  $$ = $3; }
+        | IDENTIFIER '.' IDENTIFIER STR_CONST ';'
+                                { $$ = new cOutputNode($1, $3, $4); }
         | error ';'
                                 { $$ = nullptr; }
 value : INT_VAL

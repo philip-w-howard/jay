@@ -26,6 +26,7 @@ clean:
 	rm -f jay
 	rm -f out.xml
 	rm -f out2.xml
+	rm -f jay_generated_output.cpp
 
 .cpp.o:
 	g++ $(COPTS) $? -o $@
@@ -48,3 +49,6 @@ jayparse.c: jay.y
 jay: $(OBJS)
 	g++ $(OBJS) -o jay
 
+#build routine(s) for using the Dippy compiler
+comp:
+	./jay dip2.jay

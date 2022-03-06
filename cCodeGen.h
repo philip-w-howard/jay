@@ -23,7 +23,6 @@ class cCodeGen : public cVisitor
         virtual void Visit(cSimulationNode *node);
         virtual void Visit(cSetupNode *node);
         virtual void Visit(cStockNode *node);
-        virtual void Visit(cSystemsListNode *node);
         virtual void Visit(cSystemNode *node);
         virtual void Visit(cSysVarNode *node);
         virtual void Visit(cValueSettingNode *node);

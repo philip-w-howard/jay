@@ -190,7 +190,7 @@ trailer : TRAILER CODE
 log : LOG IDENTIFIER ':' INT_VAL '{' settings '}'
                                 { $$ = new cOutputListNode($2, $4, $6, "log"); }
 csv : CSV IDENTIFIER ':' INT_VAL '{' settings '}'
-                                { $$ = new cOutputListNode($2, $4, $6, "ast"); }
+                                { $$ = new cOutputListNode($2, $4, $6, "csv"); }
 systemlist : SYSTEMS '{' sysvars '}'
                                 { $$ = new cSystemsListNode($3); }
 sysvars : sysvars sysvar

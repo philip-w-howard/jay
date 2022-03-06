@@ -1,0 +1,136 @@
+// a model of a popular desk toy
+// very basic, and probably incorrect. just for syntax demonstration
+
+system dippingBird
+{
+    header
+$
+#include <cmath>
+#include <iostream>
+$
+
+    stock waterCup : continuous
+    {
+        min = 0;
+        max = 100000;
+        initial = 100000;
+    }
+
+    stock beakTip : continuous
+    {
+        min = 0;
+        max = 100;
+        initial = 100;
+    }
+
+    stock waterOnHead : continuous
+    {
+        min = 0;
+        max = 100;
+        initial = 0;
+    }
+
+    stock upperFluid : continuous
+    {
+        min = 0;
+        max = 100;
+        initial = 0;
+    
+    }
+
+    stock lowerFluid : continuous
+    {
+        min = 0;
+        max = 100;
+        initial = 100;
+    }
+
+    function Evaporation : continuous $ value = -waterOnHead; $ 
+    function DeltaAngle : continuous $ value = sin(upperFluid / lowerFluid); $
+
+    var GasTemp : continuous
+    {
+        min = 0;
+        max = 100;
+        update = Evaporation;
+    }
+
+    var Angle : continuous
+    {
+        //math functions (sin(), cos(), sqrt()) throw a bit of a wrench in the works, huh?
+        delta = DeltaAngle;
+        min = -90;
+        max = 90;
+    }
+
+    //this is a funny one. an if statement (if angle < X) would be very useful here
+    //insight maker has a "state" object that coud be the basis for another type here. 
+    function AbsorptionRate : continuous $ value = tan(Angle); $
+    flow Absorption : continuous
+    {
+        min = 0;
+        max = 999;
+        update = AbsorptionRate;
+        source = waterCup;
+        destination = beakTip;
+    }
+
+    function CapActionRate : continuous $ value = 10; $
+    flow CapAction : continuous
+    {
+        min = 0;
+        max = 10; //only so much throughput
+        update = CapActionRate;
+        source = beakTip;
+        destination = waterOnHead;
+    }
+
+    function FluidFlowRate : continuous $ value = GasTemp + Angle; $
+
+    flow fluidFlow : continuous
+    {
+        min = -10; //can go negative
+        max = 10;
+        update = FluidFlowRate;
+        source = beakTip;
+        destination = waterOnHead;
+    }
+}
+//**************************************************
+system dippy2
+{
+    var Stuff : discrete
+    {
+        min = 0;
+        max = 5;
+    }
+}
+
+//************************************
+simulation 
+{
+    setup
+    {
+        start = 0;
+        end = infinite; 
+        units = milliseconds;
+    }
+
+    systems
+    {
+        dippy2 small;
+        dippingBird large;
+    }
+
+    log dippy_log : 10
+    {
+        small.Stuff "This is stuff: %d";
+        large.Angle "Angle: %.5f";
+    }
+
+    csv dippybirds : 20
+    {
+        small.Stuff "%d";
+        large.Angle "%.5f";
+    }
+}

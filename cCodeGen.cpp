@@ -16,9 +16,12 @@ static string front_matter =
     "// This is the beginning of the generated code\n"
     "// There should be decls, etc. here\n"
     "#include <vector>\n"
+    "#include <climits>\n"
     "#include \"cVarImpl.h\"\n"
     "#include \"cStockImpl.h\"\n"
-    "#include \"cFlowImpl.h\"\n";
+    "#include \"cFlowImpl.h\"\n"
+    "#include \"cLog.h\"\n"
+    "#include \"cCsv.h\"\n";
 
 static string end_matter =
     "//**********************************\n"
@@ -103,18 +106,20 @@ void cCodeGen::Visit(cOutputListNode *node)
 {
     if (node->GetType() == "log")
     {
-        EmitString("Log *" + node->GetName() + " = new Log(\"" + 
+        EmitString("cLog *" + node->GetName() + " = new cLog(\"" + 
                 node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
     }
-    else if (node->GetType() == "ast")
+    else if (node->GetType() == "csv")
     {
-        EmitString("Log *" + node->GetName() + " = new Log(\"" + 
+        EmitString("cCsv *" + node->GetName() + " = new cCsv(\"" + 
                 node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
     }
     else
     {
         fprintf(stderr, "Invalid type of output\n");
     }
+
+    EmitString("logList.push_back(" + node->GetName() + ");\n");
 
     m_curr_decl = node->GetName();
     node->VisitAllChildren(this);
@@ -123,7 +128,7 @@ void cCodeGen::Visit(cOutputListNode *node)
 //*************************************************
 void cCodeGen::Visit(cOutputNode *node)
 {
-    EmitString(m_curr_decl + "->AddChild(&" + node->GetName() + ", \"" + 
+    EmitString(m_curr_decl + "->AddItem(&" + node->GetName() + ", \"" + 
             node->GetFormat() + "\");\n");
 }
 //*************************************************
@@ -134,17 +139,38 @@ void cCodeGen::Visit(cSetupNode *node)
 //*************************************************
 void cCodeGen::Visit(cSimulationNode *node)
 {
+    EmitString(
+            "int main()\n"
+            "{\n"
+            "   std::vector<cLog *> logList;\n"
+            "   long start = 0;\n"
+            "   long end = LONG_MAX;\n"
+            );
+    init_body = "";
     node->VisitAllChildren(this);
+
+    EmitString(
+            "   for (long ii=start; ii<end; ii++)\n"
+            "   {\n"
+            );
+    EmitString(init_body);
+    init_body = "";
+    EmitString(
+            "     for (auto log : logList)\n"
+            "         log->Output(ii);\n"
+            );
+    EmitString("   }\n");
+    EmitString(
+            "   return 0;\n"
+            "}\n"
+            );
 }
 //*************************************************
 void cCodeGen::Visit(cSysVarNode *node)
 {
-    node->VisitAllChildren(this);
-}
-//*************************************************
-void cCodeGen::Visit(cSystemsListNode *node)
-{
-    node->VisitAllChildren(this);
+    EmitString(node->GetSystem() +  " " + node->GetName() + ";\n");
+
+    init_body += node->GetName() + ".Step();\n";
 }
 //*************************************************
 void cCodeGen::Visit(cStockNode *node)

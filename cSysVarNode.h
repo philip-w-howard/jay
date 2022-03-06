@@ -21,6 +21,8 @@ class cSysVarNode : public cDeclNode
             AddChild(system);
         }
 
+        string GetSystem() { return dynamic_cast<cSymbol*>(GetChild(1))->GetName(); }
+
         virtual string NodeType() { return string("SysVar"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

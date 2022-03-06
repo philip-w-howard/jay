@@ -17,16 +17,20 @@
 class cOutputListNode : public cDeclNode
 {
     public:
-        cOutputListNode(string name, int interval, cSettingsNode *settings) 
-            : cDeclNode(new cSymbol(name))
+        cOutputListNode(cSymbol *name, int interval, cSettingsNode *settings, string type) 
+            : cDeclNode(name)
         {
             m_interval = interval;
+            m_type = type;
             AddChild(settings);
         }
 
+        string GetType() { return m_type; }
+        long GetInterval() { return m_interval; }
+
         virtual string AttributesToString()
         {
-            return " interval=\"" + std::to_string(m_interval) + "\"";
+            return " type=\"" + m_type + "\" interval=\"" + std::to_string(m_interval) + "\"";
         }
 
         virtual string NodeType() { return GetName(); }
@@ -34,4 +38,5 @@ class cOutputListNode : public cDeclNode
 
     protected:
         long m_interval;
+        string m_type;
 };

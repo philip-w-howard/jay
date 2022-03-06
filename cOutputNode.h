@@ -23,6 +23,8 @@ class cOutputNode : public cSettingNode
             AddChild(property);
         }
 
+        string GetFormat() { return m_format; }
+
         virtual string AttributesToString()
         {
             return " format=\"" + m_format + "\"";

@@ -91,7 +91,7 @@ template <class T> class cVarImpl
         }
 
         // This function gets called in order to update the variable
-        void UpdateValue()
+        void Step()
         {
             double d_value = 0;
             long l_value = 0;

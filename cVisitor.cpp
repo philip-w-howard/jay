@@ -19,16 +19,26 @@ void cVisitor::Visit(cFuncNode *node)           { node->VisitAllChildren(this); 
 void cVisitor::Visit(cHeaderNode *node)         { node->VisitAllChildren(this); }
 void cVisitor::Visit(cIdSettingNode *node)      { node->VisitAllChildren(this); }
 void cVisitor::Visit(cIntValNode *node)         { node->VisitAllChildren(this); }
+void cVisitor::Visit(cOutputListNode *node)     { node->VisitAllChildren(this); }
+void cVisitor::Visit(cOutputNode *node)         { node->VisitAllChildren(this); }
+void cVisitor::Visit(cProgramNode *node)        { node->VisitAllChildren(this); }
 void cVisitor::Visit(cRealValNode *node)        { node->VisitAllChildren(this); }
 void cVisitor::Visit(cSettingNode *node)        { node->VisitAllChildren(this); }
 void cVisitor::Visit(cSettingsNode *node)       { node->VisitAllChildren(this); }
 void cVisitor::Visit(cSetupNode *node)          { node->VisitAllChildren(this); }
+void cVisitor::Visit(cSimulationNode *node)     { node->VisitAllChildren(this); }
 void cVisitor::Visit(cStockNode *node)          { node->VisitAllChildren(this); }
 void cVisitor::Visit(cSymbol *node)             { node->VisitAllChildren(this); }
 void cVisitor::Visit(cSystemNode *node)         { node->VisitAllChildren(this); }
+void cVisitor::Visit(cSystemsListNode *node)    { node->VisitAllChildren(this); }
+void cVisitor::Visit(cSystemsNode *node)        { node->VisitAllChildren(this); }
+void cVisitor::Visit(cSysVarNode *node)         { node->VisitAllChildren(this); }
+void cVisitor::Visit(cSysVarsNode *node)        { node->VisitAllChildren(this); }
 void cVisitor::Visit(cTrailerNode *node)        { node->VisitAllChildren(this); }
 void cVisitor::Visit(cTypeNode *node)           { node->VisitAllChildren(this); }
 void cVisitor::Visit(cUnitsNode *node)          { node->VisitAllChildren(this); }
 void cVisitor::Visit(cValueNode *node)          { node->VisitAllChildren(this); }
 void cVisitor::Visit(cValueSettingNode *node)   { node->VisitAllChildren(this); }
 void cVisitor::Visit(cVarNode *node)            { node->VisitAllChildren(this); }
+
+

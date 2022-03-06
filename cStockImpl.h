@@ -90,6 +90,31 @@ template <class T> class cStockImpl
             m_l_func = func;
             m_do_delta = true;
         }
+    
+        void add(double toAdd)
+        {
+            *m_d_dataref += toAdd;
+        }
+
+        double subtract(double toTake)
+        {
+            //this logic needs to be redone to account for negative values & min/max
+            double difference = 0;
+            if (*m_d_dataref > toTake)
+            {
+                *m_d_dataref += toTake;
+                return toTake;
+            }
+            else //take whatever is left
+            {
+                toTake = *m_d_dataref;
+                *m_d_dataref += toTake;
+                return toTake;
+            }
+
+        }
+
+
     private: 
         T *m_object;
         string m_name;
@@ -101,6 +126,7 @@ template <class T> class cStockImpl
         double m_d_max;
         long m_l_max;
 
+        //actual vaue stored in stock
         double *m_d_dataref;
         long *m_l_dataref;
 

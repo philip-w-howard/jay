@@ -128,9 +128,9 @@ simulation
         large.Angle "Angle: %.5f";
     }
 
-    csv dippybirds : 20
-    {
-        small.Stuff "%d";
-        large.Angle "%.5f";
-    }
+    //csv dippybirds : 20
+    //{
+    //    small.Stuff "%d";
+    //    large.Angle "%.5f";
+    //}
 }

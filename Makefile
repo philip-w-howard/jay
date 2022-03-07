@@ -16,6 +16,9 @@ OBJS=main.o \
 	 cCodeGen.o \
 	 emit.o \
 
+LIBS=jay_generated_output.cpp \
+	 cLog.cpp \
+
 all: jay
 
 clean:
@@ -50,5 +53,9 @@ jay: $(OBJS)
 	g++ $(OBJS) -o jay
 
 #build routine(s) for using the Dippy compiler
+#perhaps this deserves its own directory?
 comp:
-	./jay dip2.jay
+	./jay ./samples/dip2.jay
+
+cLib:
+	g++  $(LIBS) -o libTest

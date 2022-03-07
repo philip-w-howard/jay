@@ -5,6 +5,15 @@
 // frequency of 1 means log every step.
 // frequency of N means log every Nth step
 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <utility>
+
+using std::string;
+using std::cout;
+using std::pair;
+
 class cLog
 {
     public:
@@ -12,4 +21,11 @@ class cLog
         void AddItem(double *item, string format);
         void AddItem(long *item, string format);
         virtual void Output(long index);
+
+    private:
+        int m_frequency;
+        string m_filename;
+        std::vector<pair<double*, string>>m_doubles;
+        std::vector<pair<long*, string>>m_longs;
+
 };

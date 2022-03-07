@@ -30,6 +30,7 @@ clean:
 	rm -f out.xml
 	rm -f out2.xml
 	rm -f jay_generated_output.cpp
+	rm -f libTest
 
 .cpp.o:
 	g++ $(COPTS) $? -o $@
@@ -55,7 +56,7 @@ jay: $(OBJS)
 #build routine(s) for using the Dippy compiler
 #perhaps this deserves its own directory?
 comp:
-	./jay ./samples/dip2.jay
+	./jay ./samples/dip3.jay
 
 cLib:
 	g++  $(LIBS) -o libTest

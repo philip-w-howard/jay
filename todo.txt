@@ -27,8 +27,8 @@ code gen for subsystem
         vars: start, end
         log, csv = nullptr;
         objects: systems
-        log: create log
-            add items
+        log:
+            output to file
         csv: create csv
             add items
 

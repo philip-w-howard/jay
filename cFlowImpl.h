@@ -102,7 +102,63 @@ template <class T> class cFlowImpl
             m_destination = destination;
         }
 
-        void Step() {}
+        void Step() 
+        {
+            //execute flow function to determine flow rate
+            double d_value = 0;
+            long l_value = 0;
+
+            if (m_d_func != nullptr) d_value = (m_object->*m_d_func)();
+            if (m_l_func != nullptr) l_value = (m_object->*m_l_func)();
+
+            //limit flow rate
+            if (m_isFloat)
+            {
+                if (d_value > m_d_max) d_value = m_d_max;
+                if (d_value < m_d_min) d_value = m_d_min;
+            }
+            else
+            {
+                if (l_value > m_l_max) l_value = m_l_max;
+                if (l_value < m_l_min) l_value = m_l_min;
+            }
+            
+            //templates could clean this up
+
+            //apply flow rate to src and destination
+            if (m_isFloat)
+            {
+                if (m_source != nullptr && m_destination != nullptr)
+                {
+                    m_destination->add(m_source->subtract(d_value));
+                }
+                else if (m_destination != nullptr)
+                {
+                    m_destination->add(d_value);
+                }
+                else if (m_source != nullptr)
+                {
+                    m_source->subtract(d_value);
+                }
+            }
+            else
+            {
+                if (m_source != nullptr && m_destination != nullptr)
+                {
+                    m_destination->add(m_source->subtract(l_value));
+                }
+                else if (m_destination != nullptr)
+                {
+                    m_destination->add(l_value);
+                }
+                else if (m_source != nullptr)
+                {
+                    m_source->subtract(l_value);
+                }
+            }
+
+
+        }
     private: 
         T *m_object;
         string m_name;

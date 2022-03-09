@@ -1,0 +1,69 @@
+system PopSim
+{
+    //start = 1900;
+    //end = 2000;
+
+    stock Population: continuous
+    {
+        min = 0;
+        initial = 1000;
+    }
+
+    stock Null: continuous
+    {
+        initial = 999999;
+    }
+
+    var DeathRate : continuous
+    {
+        initial = 1.5;
+        min = 0;
+        max = 100;
+    }
+    var BirthRate : continuous
+    {
+        initial = 2.5;
+        min = 0;
+        max = 100;
+    }
+
+    function birthRate : continuous $ value = Population * BirthRate / 100; $
+    flow Births: discrete
+    {
+        update = birthRate;
+        source = Null;
+        destination = Population;
+        min = 0;
+        max = 999999;
+    }
+
+    function deathRate : continuous $ value = Population * DeathRate / 100; $
+    flow Deaths: discrete
+    {
+        update = deathRate;
+        source = Population;
+        destination = Null;
+        min = 0;
+        max = 999999;
+    }
+}
+
+simulation
+{
+    setup
+    {
+        start = 0;
+        end = infinite;
+        units = years;
+    }
+
+    systems
+    {
+        PopSim village;
+    }
+
+    log pop_log : 1
+    {
+        village.Population "Population: ";
+    }
+}

@@ -6,6 +6,7 @@
 // system that the variable is defined in.
 
 #include <string>
+#include <iostream>
 using std::string;
 
 // Template variable is the Jay system the variable is defined in
@@ -93,6 +94,7 @@ template <class T> class cStockImpl
     
         void add(double toAdd)
         {
+            //std::cout << "adding: " << toAdd << "\n";
             *m_d_dataref += toAdd;
         }
 

@@ -40,3 +40,6 @@ code gen for subsystem
 
 allow multiple logs and csv's
 add name to LOG, CSV
+properly append .txt or .csv to filenames
+initfile() function to open/clear file and allow for headers/column names
+support string formatting for file output

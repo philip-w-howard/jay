@@ -9,6 +9,9 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <fstream>
+
+#include <stdio.h>
 
 using std::string;
 using std::cout;
@@ -20,9 +23,10 @@ class cLog
         cLog(string filename, int frequency = 1);
         void AddItem(double *item, string format);
         void AddItem(long *item, string format);
+        void Print(long index);
         virtual void Output(long index);
 
-    private:
+    protected:
         int m_frequency;
         string m_filename;
         std::vector<pair<double*, string>>m_doubles;

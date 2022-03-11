@@ -18,6 +18,7 @@ OBJS=main.o \
 
 LIBS=jay_generated_output.cpp \
 	 cLog.cpp \
+	 cCsv.cpp \
 
 all: jay
 

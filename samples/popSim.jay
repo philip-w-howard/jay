@@ -6,7 +6,7 @@ system PopSim
     stock Population: continuous
     {
         min = 0;
-        initial = 1000;
+        initial = 100;
     }
 
     stock Null: continuous
@@ -16,13 +16,13 @@ system PopSim
 
     var DeathRate : continuous
     {
-        initial = 1.5;
+        initial = 1;
         min = 0;
         max = 100;
     }
     var BirthRate : continuous
     {
-        initial = 2.5;
+        initial = 1.1;
         min = 0;
         max = 100;
     }
@@ -62,8 +62,16 @@ simulation
         PopSim village;
     }
 
-    log pop_log : 1
+    log pop_log : 10
     {
         village.Population "Population: ";
+        village.BirthRate "Birth Rate (%): ";
+        village.DeathRate "Death Rate (%): ";
     }
+
+    csv pop_csv : 1
+    {
+        village.Population "Population";
+    }
+
 }

@@ -111,9 +111,11 @@ template <class T> class cFlowImpl
             if (m_d_func != nullptr) d_value = (m_object->*m_d_func)();
             if (m_l_func != nullptr) l_value = (m_object->*m_l_func)();
 
+            /*
             std::cout << "Flow: " << m_name 
                 << " l value: " << l_value 
                 << " d value: " << d_value << "\n"; 
+            */
 
             //limit flow rate
             if (m_isFloat)

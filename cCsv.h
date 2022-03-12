@@ -10,8 +10,8 @@
 class cCsv : public cLog
 {
     public:
-        cCsv(string filename, int frequency = 1) : cLog(filename, frequency)
-        {}
-
-        virtual void Output(long index);
+    cCsv(string filename, int frequency = 1) : cLog(filename, frequency)
+    {}
+    void MarkColumns();
+    virtual void Output(long index);
 };

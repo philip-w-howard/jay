@@ -21,6 +21,7 @@ class cLog
 {
     public:
         cLog(string filename, int frequency = 1);
+        ~cLog();
         void AddItem(double *item, string format);
         void AddItem(long *item, string format);
         void Print(long index);
@@ -31,5 +32,5 @@ class cLog
         string m_filename;
         std::vector<pair<double*, string>>m_doubles;
         std::vector<pair<long*, string>>m_longs;
-
+        std::fstream m_file;
 };

@@ -10,6 +10,16 @@ cLog::cLog(string filename, int frequency)
 {
     m_frequency = frequency;
     m_filename = filename;
+
+    //initialize and touch file
+    std::ofstream m_file;
+    m_file.open(m_filename);
+    m_file.close();
+}
+
+cLog::~cLog()
+{
+    //m_file.close();
 }
 void cLog::AddItem(double *item, string format)
 {
@@ -22,26 +32,32 @@ void cLog::AddItem(long *item, string format)
     m_longs.push_back(toAdd);
 }
 
-//output to file "m_filename.txt" every m_frequency steps
+//output to file "m_filename" every m_frequency steps
 void cLog::Output(long index)
 {
-    std::fstream file;
-    file.open(m_filename, std::ios_base::app);
-    if (index % m_frequency == 0)
+    m_file.open(m_filename, std::ios::app);
+    if (m_file)
     {
-        //cout << index << ":\n";
-        //print all items
-        for (auto item : m_doubles)
+        if (index % m_frequency == 0)
         {
-            file << item.second << *item.first << "\n";
+            //cout << index << ":\n";
+            //print all items
+            for (auto item : m_doubles)
+            {
+                m_file << item.second << *item.first << "\n";
+            }
+            for (auto item : m_longs)
+            {
+                m_file << item.second << *item.first << "\n";
+            }
+            m_file << "\n";
         }
-        for (auto item : m_longs)
-        {
-            file << item.second << *item.first << "\n";
-        }
-        file << "\n";
+        m_file.close();
     }
-    file.close();
+    else
+    {
+        cout << "File " << m_filename << " was not found!\n";
+    }
 }
 
 //output to stdout

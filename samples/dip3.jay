@@ -1,5 +1,4 @@
 // a model of a popular desk toy
-// very basic, and probably incorrect. just for syntax demonstration
 
 system dippingBird
 {
@@ -46,7 +45,7 @@ $
     }
 
     function Evaporation : continuous $ value = -waterOnHead; $ 
-    function DeltaAngle : continuous $ value = sin(upperFluid / lowerFluid); $
+    function DeltaAngle : continuous $ if (lowerFluid ) value = -1; $
 
     var GasTemp : continuous
     {
@@ -65,7 +64,7 @@ $
 
     //this is a funny one. an if statement (if angle < X) would be very useful here
     //insight maker has a "state" object that coud be the basis for another type here. 
-    function AbsorptionRate : continuous $ value = tan(Angle); $
+    function AbsorptionRate : continuous $ if (Angle < 10) value = 100; $
     flow Absorption : continuous
     {
         min = 0;
@@ -85,7 +84,7 @@ $
         destination = waterOnHead;
     }
 
-    function FluidFlowRate : continuous $ value = GasTemp + Angle; $
+    function FluidFlowRate : continuous $ value = 1; $
 
     flow fluidFlow : continuous
     {
@@ -96,16 +95,6 @@ $
         destination = waterOnHead;
     }
 }
-//**************************************************
-system dippy2
-{
-    var Stuff : discrete
-    {
-        min = 0;
-        max = 5;
-    }
-}
-
 //************************************
 simulation 
 {
@@ -118,20 +107,21 @@ simulation
 
     systems
     {
-        dippy2 small;
         dippingBird large;
     }
 
     log dippy_log : 10
     {
-        small.Stuff "This is stuff: %d";
-        large.Angle "Angle: %.5f";
+        large.Angle "Angle: ";
         large.waterCup "Water in cup: ";
     }
 
-    //csv dippybirds : 20
-    //{
-    //    small.Stuff "%d";
-    //    large.Angle "%.5f";
-    //}
+    csv dippybird : 1
+    {
+        large.Angle " ";
+        large.lowerFluid " ";
+        large.upperFluid " ";
+        large.waterCup " ";
+        large.waterOnHead " ";
+    }
 }

@@ -23,12 +23,12 @@ cLog::~cLog()
 }
 void cLog::AddItem(double *item, string format)
 {
-    pair toAdd(item, format);
+    pair<double*, string> toAdd(item, format);
     m_doubles.push_back(toAdd);
 }
 void cLog::AddItem(long *item, string format)
 {
-    pair toAdd(item, format);
+    pair<long*, string> toAdd(item, format);
     m_longs.push_back(toAdd);
 }
 

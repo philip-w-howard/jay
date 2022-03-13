@@ -14,12 +14,11 @@ cLog::cLog(string filename, int frequency)
     //initialize and touch file
     std::ofstream m_file;
     m_file.open(m_filename);
-    m_file.close();
 }
 
 cLog::~cLog()
 {
-    //m_file.close();
+    m_file.close();
 }
 void cLog::AddItem(double *item, string format)
 {
@@ -35,7 +34,6 @@ void cLog::AddItem(long *item, string format)
 //output to file "m_filename" every m_frequency steps
 void cLog::Output(long index)
 {
-    m_file.open(m_filename, std::ios::app);
     if (m_file)
     {
         if (index % m_frequency == 0)
@@ -52,7 +50,6 @@ void cLog::Output(long index)
             }
             m_file << "\n";
         }
-        m_file.close();
     }
     else
     {

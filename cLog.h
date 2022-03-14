@@ -22,33 +22,31 @@ class cLog
     public:
         cLog(string filename, int frequency = 1);
         ~cLog();
-        void AddItem(double *item, string format, string label="");
-        void AddItem(long *item, string format, string label="");
+        void AddItem(double *item, string format);
+        void AddItem(long *item, string format);
         virtual void Output(long index);
 
     protected:
         class cLogItem
         {
             public:
-                cLogItem(double *data, string format, string label="")
+                cLogItem(double *data, string format)
                 {
                     m_data = data;
                     m_format = format;
                     m_isFloat = true;
-                    m_label = label;
                 }
 
-                cLogItem(long *data, string format, string label="")
+                cLogItem(long *data, string format)
                 {
                     m_data = data;
                     m_format = format;
                     m_isFloat = false;
-                    m_label = label;
                 }
 
                 string GetText()
                 {
-                    if (m_format == "")
+                    if (m_format.find("%") == string::npos)
                     {
                         if (m_isFloat)
                             return std::to_string(*(double*)m_data);
@@ -70,7 +68,7 @@ class cLog
 
                 string GetLabel()
                 {
-                    return m_label;
+                    return m_format;
                 }
             protected:
                 void *m_data;

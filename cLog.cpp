@@ -19,13 +19,13 @@ cLog::~cLog()
 {
     m_file.close();
 }
-void cLog::AddItem(double *item, string format, string label)
+void cLog::AddItem(double *item, string format)
 {
-    m_items.push_back(cLogItem(item, format, label));
+    m_items.push_back(cLogItem(item, format));
 }
-void cLog::AddItem(long *item, string format, string label)
+void cLog::AddItem(long *item, string format)
 {
-    m_items.push_back(cLogItem(item, format, label));
+    m_items.push_back(cLogItem(item, format));
 }
 
 //output to file "m_filename" every m_frequency steps

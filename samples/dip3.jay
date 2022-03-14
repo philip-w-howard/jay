@@ -118,10 +118,10 @@ simulation
 
     csv dippybird : 1
     {
-        large.Angle " ";
-        large.lowerFluid " ";
-        large.upperFluid " ";
-        large.waterCup " ";
-        large.waterOnHead " ";
+        large.Angle "Angle";
+        large.lowerFluid "Lower Fluid";
+        large.upperFluid "Upper Fluid";
+        large.waterCup "Water in Cup";
+        large.waterOnHead "Water on Head";
     }
 }

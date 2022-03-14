@@ -144,9 +144,10 @@ void cCodeGen::Visit(cSimulationNode *node)
             "{\n"
             "   std::vector<cLog *> logList;\n"
             "   long start = 0;\n"
-            "   long end = 100;\n"
+            "   long end = LONG_MAX;\n"
             );
     init_body = "";
+    m_curr_decl = "$simulation";
     node->VisitAllChildren(this);
 
     EmitString(
@@ -237,7 +238,11 @@ void cCodeGen::Visit(cSystemNode *node)
 //*************************************************
 void cCodeGen::Visit(cValueSettingNode *node)
 {
-    if (m_curr_decl != "")
+    if (m_curr_decl == "$simulation")
+    {
+        EmitString(node->GetName() + "=" + node->GetValue()->GetTextValue() + ";\n");
+    }
+    else if (m_curr_decl != "")
     {
         init_body += m_curr_decl + "_Impl->Add" + node->GetName() + "(" +
             node->GetValue()->GetTextValue() + ");\n";

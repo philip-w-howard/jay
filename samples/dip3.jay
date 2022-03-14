@@ -101,7 +101,7 @@ simulation
     setup
     {
         start = 0;
-        end = 1000; 
+        end = 500; 
         units = milliseconds;
     }
 
@@ -114,6 +114,12 @@ simulation
     {
         large.Angle    "Angle:        %10.3f";
         large.waterCup "Water in cup: %10.3f";
+    }
+
+    log log2 : 10
+    {
+        large.Angle    "Angle:    %10.3f";
+        large.GasTemp  "Gas Temo: %10.3f";
     }
 
     csv dippybird : 1

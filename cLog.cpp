@@ -19,15 +19,13 @@ cLog::~cLog()
 {
     m_file.close();
 }
-void cLog::AddItem(double *item, string format)
+void cLog::AddItem(double *item, string format, string label)
 {
-    pair<double*, string> toAdd(item, format);
-    m_doubles.push_back(toAdd);
+    m_items.push_back(cLogItem(item, format, label));
 }
-void cLog::AddItem(long *item, string format)
+void cLog::AddItem(long *item, string format, string label)
 {
-    pair<long*, string> toAdd(item, format);
-    m_longs.push_back(toAdd);
+    m_items.push_back(cLogItem(item, format, label));
 }
 
 //output to file "m_filename" every m_frequency steps
@@ -39,17 +37,10 @@ void cLog::Output(long index)
     {
         if (index % m_frequency == 0)
         {
-            //cout << index << ":\n";
             //print all items
-            for (auto item : m_doubles)
+            for (auto item : m_items)
             {
-                sprintf(buff, item.second.c_str(), *(item.first));
-                m_file << buff << "\n";
-                //m_file << item.second << *item.first << "\n";
-            }
-            for (auto item : m_longs)
-            {
-                m_file << item.second << *item.first << "\n";
+                m_file << item.GetText() << "\n";
             }
             m_file << "\n";
         }
@@ -59,30 +50,3 @@ void cLog::Output(long index)
         cout << "File " << m_filename << " was not found!\n";
     }
 }
-
-//output to stdout
-void cLog::Print(long index)
-{
-    //char temp [99]; //unwise 
-    if (index % m_frequency == 0)
-    {
-        cout << index << ":\n";
-        //print all items
-        for (auto item : m_doubles)
-        {
-            //sprintf wasn't working, skipped for time/counsel
-            //sprintf(temp, item.second.c_str(), item.first); 
-            //cout << temp;
-
-            cout << item.second <<*item.first << "\n";
-        }
-        for (auto item : m_longs)
-        {
-            //sprintf(temp, item.second.c_str(), item.first); 
-            //cout << temp;
-
-            cout << item.second <<*item.first << "\n";
-        }
-    }
-}
-

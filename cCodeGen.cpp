@@ -107,12 +107,12 @@ void cCodeGen::Visit(cOutputListNode *node)
     if (node->GetType() == "log")
     {
         EmitString("cLog *" + node->GetName() + " = new cLog(\"" + 
-                node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
+                node->GetName() + ".log\", " + std::to_string(node->GetInterval()) + ");\n");
     }
     else if (node->GetType() == "csv")
     {
         EmitString("cCsv *" + node->GetName() + " = new cCsv(\"" + 
-                node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
+                node->GetName() + ".csv\", " + std::to_string(node->GetInterval()) + ");\n");
     }
     else
     {

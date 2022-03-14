@@ -22,15 +22,65 @@ class cLog
     public:
         cLog(string filename, int frequency = 1);
         ~cLog();
-        void AddItem(double *item, string format);
-        void AddItem(long *item, string format);
-        void Print(long index);
+        void AddItem(double *item, string format, string label="");
+        void AddItem(long *item, string format, string label="");
         virtual void Output(long index);
 
     protected:
+        class cLogItem
+        {
+            public:
+                cLogItem(double *data, string format, string label="")
+                {
+                    m_data = data;
+                    m_format = format;
+                    m_isFloat = true;
+                    m_label = label;
+                }
+
+                cLogItem(long *data, string format, string label="")
+                {
+                    m_data = data;
+                    m_format = format;
+                    m_isFloat = false;
+                    m_label = label;
+                }
+
+                string GetText()
+                {
+                    if (m_format == "")
+                    {
+                        if (m_isFloat)
+                            return std::to_string(*(double*)m_data);
+                        else
+                            return std::to_string(*(long*)m_data);
+                    }
+                    else
+                    {
+                        char buff[256];
+
+                        if (m_isFloat)
+                            sprintf(buff, m_format.c_str(), *(double*)m_data);
+                        else
+                            sprintf(buff, m_format.c_str(), *(long*)m_data);
+
+                        return string(buff);
+                    }
+                }
+
+                string GetLabel()
+                {
+                    return m_label;
+                }
+            protected:
+                void *m_data;
+                bool m_isFloat;
+                string m_format;
+                string m_label;
+        };
         int m_frequency;
         string m_filename;
-        std::vector<pair<double*, string>>m_doubles;
-        std::vector<pair<long*, string>>m_longs;
+        std::vector<cLogItem> m_items;
         std::ofstream m_file;
+
 };

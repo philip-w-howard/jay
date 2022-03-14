@@ -59,5 +59,7 @@ jay: $(OBJS)
 comp:
 	./jay ./samples/dip3.jay
 
-cLib:
-	g++  $(LIBS) -o libTest
+cLib: 
+	g++  -g -O0 $(LIBS) -o libTest
+
+sample: comp cLib

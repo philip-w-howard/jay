@@ -32,5 +32,5 @@ class cLog
         string m_filename;
         std::vector<pair<double*, string>>m_doubles;
         std::vector<pair<long*, string>>m_longs;
-        std::fstream m_file;
+        std::ofstream m_file;
 };

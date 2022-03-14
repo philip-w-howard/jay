@@ -12,7 +12,6 @@ cLog::cLog(string filename, int frequency)
     m_filename = filename;
 
     //initialize and touch file
-    std::ofstream m_file;
     m_file.open(m_filename);
 }
 
@@ -34,7 +33,9 @@ void cLog::AddItem(long *item, string format)
 //output to file "m_filename" every m_frequency steps
 void cLog::Output(long index)
 {
-    if (m_file)
+    char buff[256];
+
+    if (m_file.is_open())
     {
         if (index % m_frequency == 0)
         {
@@ -42,7 +43,9 @@ void cLog::Output(long index)
             //print all items
             for (auto item : m_doubles)
             {
-                m_file << item.second << *item.first << "\n";
+                sprintf(buff, item.second.c_str(), *(item.first));
+                m_file << buff << "\n";
+                //m_file << item.second << *item.first << "\n";
             }
             for (auto item : m_longs)
             {

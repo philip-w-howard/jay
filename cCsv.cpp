@@ -26,7 +26,7 @@ void cCsv::MarkColumns()
 void cCsv::Output(long index)
 {
     m_file.open(m_filename, std::ios::app);
-    if (m_file)
+    if (m_file.is_open())
     {
         if (index % m_frequency == 0)
         {

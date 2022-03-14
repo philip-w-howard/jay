@@ -144,7 +144,7 @@ void cCodeGen::Visit(cSimulationNode *node)
             "{\n"
             "   std::vector<cLog *> logList;\n"
             "   long start = 0;\n"
-            "   long end = LONG_MAX;\n"
+            "   long end = 100;\n"
             );
     init_body = "";
     node->VisitAllChildren(this);
@@ -160,6 +160,14 @@ void cCodeGen::Visit(cSimulationNode *node)
             "         log->Output(ii);\n"
             );
     EmitString("   }\n");
+    EmitString(
+            "   // delete the logs to invoke the destructors\n"
+            "   for (auto log : logList)\n"
+            "   {\n"
+            "      delete log;\n"
+            "   }\n"
+            );
+
     EmitString(
             "   return 0;\n"
             "}\n"

@@ -101,7 +101,7 @@ simulation
     setup
     {
         start = 0;
-        end = infinite; 
+        end = 1000; 
         units = milliseconds;
     }
 
@@ -112,8 +112,8 @@ simulation
 
     log dippy_log : 10
     {
-        large.Angle "Angle: ";
-        large.waterCup "Water in cup: ";
+        large.Angle    "Angle:        %10.3f";
+        large.waterCup "Water in cup: %10.3f";
     }
 
     csv dippybird : 1

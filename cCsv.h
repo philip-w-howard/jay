@@ -11,7 +11,11 @@ class cCsv : public cLog
 {
     public:
     cCsv(string filename, int frequency = 1) : cLog(filename, frequency)
-    {}
-    void MarkColumns();
+    { m_labelsAreDone = false; }
     virtual void Output(long index);
+
+    protected:
+        bool m_labelsAreDone;
+
+        void MarkColumns();
 };

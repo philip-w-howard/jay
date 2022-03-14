@@ -12,77 +12,41 @@ cLog::cLog(string filename, int frequency)
     m_filename = filename;
 
     //initialize and touch file
-    std::ofstream m_file;
     m_file.open(m_filename);
-    m_file.close();
 }
 
 cLog::~cLog()
 {
-    //m_file.close();
+    m_file.close();
 }
 void cLog::AddItem(double *item, string format)
 {
-    pair toAdd(item, format);
-    m_doubles.push_back(toAdd);
+    m_items.push_back(cLogItem(item, format));
 }
 void cLog::AddItem(long *item, string format)
 {
-    pair toAdd(item, format);
-    m_longs.push_back(toAdd);
+    m_items.push_back(cLogItem(item, format));
 }
 
 //output to file "m_filename" every m_frequency steps
 void cLog::Output(long index)
 {
-    m_file.open(m_filename, std::ios::app);
-    if (m_file)
+    char buff[256];
+
+    if (m_file.is_open())
     {
         if (index % m_frequency == 0)
         {
-            //cout << index << ":\n";
             //print all items
-            for (auto item : m_doubles)
+            for (auto item : m_items)
             {
-                m_file << item.second << *item.first << "\n";
-            }
-            for (auto item : m_longs)
-            {
-                m_file << item.second << *item.first << "\n";
+                m_file << item.GetText() << "\n";
             }
             m_file << "\n";
         }
-        m_file.close();
     }
     else
     {
         cout << "File " << m_filename << " was not found!\n";
     }
 }
-
-//output to stdout
-void cLog::Print(long index)
-{
-    //char temp [99]; //unwise 
-    if (index % m_frequency == 0)
-    {
-        cout << index << ":\n";
-        //print all items
-        for (auto item : m_doubles)
-        {
-            //sprintf wasn't working, skipped for time/counsel
-            //sprintf(temp, item.second.c_str(), item.first); 
-            //cout << temp;
-
-            cout << item.second <<*item.first << "\n";
-        }
-        for (auto item : m_longs)
-        {
-            //sprintf(temp, item.second.c_str(), item.first); 
-            //cout << temp;
-
-            cout << item.second <<*item.first << "\n";
-        }
-    }
-}
-

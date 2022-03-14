@@ -2,19 +2,16 @@
 
 void cCsv::MarkColumns()
 {
-    m_file.open(m_filename, std::ios::app);
-    if (m_file)
+    if (m_file.is_open())
     {
-        for (auto item : m_doubles)
+        m_file << "Sequence, ";
+        for (auto item : m_items)
         {
-            m_file << item.second << ", ";
-        }
-        for (auto item : m_longs)
-        {
-            m_file << item.second << ", ";
+            m_file << item.GetLabel() << ", ";
         }
         m_file << "\n";
-        m_file.close();
+
+        m_labelsAreDone = true;
     }
     else
     {
@@ -25,24 +22,20 @@ void cCsv::MarkColumns()
 //output to file "m_filename.csv" every m_frequency steps
 void cCsv::Output(long index)
 {
-    m_file.open(m_filename, std::ios::app);
-    if (m_file)
+    if (!m_labelsAreDone) MarkColumns();
+
+    if (m_file.is_open())
     {
         if (index % m_frequency == 0)
         {
             m_file << index << ", ";
             //print all items
-            for (auto item : m_doubles)
+            for (auto item : m_items)
             {
-                m_file << *item.first << ", ";
-            }
-            for (auto item : m_longs)
-            {
-                m_file << *item.first << ", ";
+                m_file << item.GetText() << ", ";
             }
             m_file << "\n";
         }
-        m_file.close();
     }
     else
     {

@@ -107,12 +107,12 @@ void cCodeGen::Visit(cOutputListNode *node)
     if (node->GetType() == "log")
     {
         EmitString("cLog *" + node->GetName() + " = new cLog(\"" + 
-                node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
+                node->GetName() + ".log\", " + std::to_string(node->GetInterval()) + ");\n");
     }
     else if (node->GetType() == "csv")
     {
         EmitString("cCsv *" + node->GetName() + " = new cCsv(\"" + 
-                node->GetName() + "\", " + std::to_string(node->GetInterval()) + ");\n");
+                node->GetName() + ".csv\", " + std::to_string(node->GetInterval()) + ");\n");
     }
     else
     {
@@ -147,6 +147,7 @@ void cCodeGen::Visit(cSimulationNode *node)
             "   long end = LONG_MAX;\n"
             );
     init_body = "";
+    m_curr_decl = "$simulation";
     node->VisitAllChildren(this);
 
     EmitString(
@@ -160,6 +161,14 @@ void cCodeGen::Visit(cSimulationNode *node)
             "         log->Output(ii);\n"
             );
     EmitString("   }\n");
+    EmitString(
+            "   // delete the logs to invoke the destructors\n"
+            "   for (auto log : logList)\n"
+            "   {\n"
+            "      delete log;\n"
+            "   }\n"
+            );
+
     EmitString(
             "   return 0;\n"
             "}\n"
@@ -229,7 +238,11 @@ void cCodeGen::Visit(cSystemNode *node)
 //*************************************************
 void cCodeGen::Visit(cValueSettingNode *node)
 {
-    if (m_curr_decl != "")
+    if (m_curr_decl == "$simulation")
+    {
+        EmitString(node->GetName() + "=" + node->GetValue()->GetTextValue() + ";\n");
+    }
+    else if (m_curr_decl != "")
     {
         init_body += m_curr_decl + "_Impl->Add" + node->GetName() + "(" +
             node->GetValue()->GetTextValue() + ");\n";

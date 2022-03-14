@@ -14,33 +14,4 @@ Command line options
     ast
         xmllint output
 
-grammar code snippets for subsystem
-code gen for subsystem
-     system: step()     xxx
-    _Impl: update()     xxx
-    log
-        AddItem(&long, string format);
-        Output()
-    csv subclass log. Override Output()
-
-    main
-        vars: start, end
-        log, csv = nullptr;
-        objects: systems
-        log:
-            output to file
-        csv: create csv
-            add items
-
-        for start .. end
-            obj1.step()
-            obj2.step()
-            log->Output(index)
-            csv->Output(index)
-
-allow multiple logs and csv's
-add name to LOG, CSV
-properly append .txt or .csv to filenames
-support string formatting for file output
-
 flows must check the maximum of a stock before adding to it.

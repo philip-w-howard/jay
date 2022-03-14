@@ -101,7 +101,7 @@ simulation
     setup
     {
         start = 0;
-        end = infinite; 
+        end = 500; 
         units = milliseconds;
     }
 
@@ -112,16 +112,22 @@ simulation
 
     log dippy_log : 10
     {
-        large.Angle "Angle: ";
-        large.waterCup "Water in cup: ";
+        large.Angle    "Angle:        %10.3f";
+        large.waterCup "Water in cup: %10.3f";
+    }
+
+    log log2 : 10
+    {
+        large.Angle    "Angle:    %10.3f";
+        large.GasTemp  "Gas Temo: %10.3f";
     }
 
     csv dippybird : 1
     {
-        large.Angle " ";
-        large.lowerFluid " ";
-        large.upperFluid " ";
-        large.waterCup " ";
-        large.waterOnHead " ";
+        large.Angle "Angle";
+        large.lowerFluid "Lower Fluid";
+        large.upperFluid "Upper Fluid";
+        large.waterCup "Water in Cup";
+        large.waterOnHead "Water on Head";
     }
 }

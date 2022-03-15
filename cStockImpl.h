@@ -94,25 +94,25 @@ template <class T> class cStockImpl
     
         void add(double toAdd)
         {
-            //std::cout << "adding: " << toAdd << "\n";
             *m_d_dataref += toAdd;
+            if (*m_d_dataref > m_d_max) *m_d_dataref = m_d_max;
+            if (*m_d_dataref < m_d_min) *m_d_dataref = m_d_min;
         }
 
         double subtract(double toTake)
         {
             //this logic needs to be redone to account for negative values & min/max
-            double difference = 0;
             if (*m_d_dataref > toTake)
             {
-                *m_d_dataref += toTake;
-                return toTake;
+                *m_d_dataref -= toTake;
             }
             else //take whatever is left
             {
                 toTake = *m_d_dataref;
-                *m_d_dataref += toTake;
-                return toTake;
+                *m_d_dataref -= toTake;
             }
+
+            return toTake;
 
         }
 

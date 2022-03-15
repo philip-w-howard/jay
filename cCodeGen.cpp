@@ -51,8 +51,13 @@ void cCodeGen::Visit(cFlowNode *node)
     EmitString(output);
 
     init_body += "\n" + node->GetName() + "_Impl = " + 
-        "new cFlowImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", " + 
-        "false , nullptr, this);\n";
+        "new cFlowImpl<" + m_curr_system + ">( \"" + node->GetName() + "\", ";
+    if (node->IsFloat())
+        init_body += "true, ";
+    else
+        init_body += "false, ";
+
+    init_body += "nullptr, this);\n";
 
     init_body += "m_flows.push_back(" +  node->GetName() + "_Impl);\n";
     m_curr_decl = node->GetName();

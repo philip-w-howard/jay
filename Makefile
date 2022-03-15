@@ -56,10 +56,6 @@ jay: $(OBJS)
 
 #build routine(s) for using the Dippy compiler
 #perhaps this deserves its own directory?
-comp:
-	./jay ./samples/dip3.jay
-
-cLib: 
-	g++  -g -O0 $(LIBS) -o libTest
-
-sample: comp cLib
+sample: jay
+	./jay ./samples/drinker.jay
+	g++  -g -O0 $(LIBS) -o drinker

@@ -36,5 +36,5 @@ class cDeclNode : public cAstNode
             return dynamic_cast<cSymbol*>(GetChild(0))->GetName();
         }
 
-        virtual bool IsReal() { return false; }
+        virtual bool IsFloat() { return false; }
 };

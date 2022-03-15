@@ -1,0 +1,81 @@
+// a model of a popular desk toy
+
+system DrinkingBird
+{
+    header
+$
+#include <cmath>
+$
+    stock upperFluid : continuous
+    {
+        min = 0;
+        max = 100;
+        initial = 0;
+    
+    }
+
+    stock lowerFluid : continuous
+    {
+        min = 0.01;
+        max = 100;
+        initial = 99.5;
+    }
+
+    function ComputeAngle : continuous $ value = 180.0 / 3.141592 * atan(upperFluid/lowerFluid); $
+
+    var Angle : continuous
+    {
+        update = ComputeAngle;
+        min = 0;
+        max = 90;
+        initial = 0;
+    }
+
+    function FlowUp : continuous $ value = 1; $
+    function FlowDown : continuous 
+    $ 
+        if (Angle > 70) 
+            value = 40; 
+        else 
+            value = 0; 
+    $
+
+    flow fluidFlowUp : continuous
+    {
+        min = 0;
+        max = 10;
+        update = FlowUp;
+        source = lowerFluid;
+        destination = upperFluid;
+    }
+
+    flow fluidFlowDown : continuous
+    {
+        min = 0;
+        max = 90;
+        update = FlowDown;
+        source = upperFluid;
+        destination = lowerFluid;
+    }
+}
+//************************************
+simulation 
+{
+    setup
+    {
+        start = 0;
+        end = 2500; 
+    }
+
+    systems
+    {
+        DrinkingBird dippy;
+    }
+
+    csv drinkingbird : 1
+    {
+        dippy.Angle "Angle";
+        dippy.lowerFluid "Lower Fluid";
+        dippy.upperFluid "Upper Fluid";
+    }
+}

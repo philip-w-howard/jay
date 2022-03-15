@@ -29,9 +29,17 @@ class cFlowNode : public cDeclNode
             
             AddChild(type);
             AddChild(settings);
+            if (type->IsFloat())
+                m_isFloat = true;
+            else
+                m_isFloat = false;
         }
+
+        bool IsFloat() { return m_isFloat; }
 
         virtual string NodeType() { return string("Flow"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 
+    protected:
+        bool m_isFloat;
 };

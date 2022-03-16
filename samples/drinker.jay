@@ -22,10 +22,14 @@ $
     }
 
     function ComputeAngle : continuous $ value = 180.0 / 3.141592 * atan(upperFluid/lowerFluid); $
+    function DeltaAngle : continuous 
+    $ 
+        value = 0.1 * (upperFluid - lowerFluid);
+    $
 
     var Angle : continuous
     {
-        update = ComputeAngle;
+        delta = DeltaAngle;
         min = 0;
         max = 90;
         initial = 0;
@@ -35,7 +39,7 @@ $
     function FlowDown : continuous 
     $ 
         if (Angle > 70) 
-            value = 40; 
+            value = 20; 
         else 
             value = 0; 
     $
@@ -64,7 +68,7 @@ simulation
     setup
     {
         start = 0;
-        end = 2500; 
+        end = 400; 
     }
 
     systems

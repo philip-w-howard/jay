@@ -21,16 +21,33 @@ $
         initial = 99.5;
     }
 
-    function ComputeAngle : continuous $ value = 180.0 / 3.141592 * atan(upperFluid/lowerFluid); $
+    function ComputeAngle : continuous 
+    $ 
+        value = 180.0 / 3.141592 * atan(upperFluid/lowerFluid); 
+    $
+
     function DeltaAngle : continuous 
     $ 
-        value = 0.1 * (upperFluid - lowerFluid);
+        value = 0.05 * (upperFluid - lowerFluid);
     $
+
+    function DeltaV : continuous 
+    $ 
+        value = 0.05 * (upperFluid - lowerFluid);
+    $
+
+    var AngularVelocity : continuous
+    {
+        min = -10;
+        max = 10;
+        initial = 0;
+        delta = DeltaV;
+    }
 
     var Angle : continuous
     {
         delta = DeltaAngle;
-        min = 0;
+        min = -90;
         max = 90;
         initial = 0;
     }
@@ -68,7 +85,7 @@ simulation
     setup
     {
         start = 0;
-        end = 400; 
+        end = 600; 
     }
 
     systems
